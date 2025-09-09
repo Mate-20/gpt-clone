@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,12 +26,13 @@
   --secondary-bg: #181818;
   --primary-text: #ffffff;
   --secondary-text: #afafaf;
-  --border-color: #ffffff26;
+  --border-color: #2c2c2c;
   --border-radius: 10px;
   --border-radius-100: 4px;
   --border-radius-200: 8px;
   --border-radius-300: 12px;
   --border-radius-400: 16px;
+  --border-radius-450: 28px;
   --border-radius-500: 32px;
   --border-radius-600: 999px;
   --font-size-75: 12px;

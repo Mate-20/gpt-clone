@@ -28,7 +28,7 @@ const Sidebar = () => {
     <motion.aside
       animate={{ width: isCollapsed ? 52 : 260 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="bg-[var(--secondary-bg)] h-[100vh] flex flex-col gap-5 px-2 pt-3 overflow-hidden"
+      className={`${isCollapsed ? "bg-[var(--primary-bg)] border-r border-[var(--border-color)]" : "bg-[var(--secondary-bg)]"}  h-[100vh] flex-col gap-3 px-2 pt-2 overflow-hidden hidden md:flex`}
     >
       {/* top logo + toggle */}
       <div className="flex items-center justify-between">
@@ -43,7 +43,7 @@ const Sidebar = () => {
               />
             </div>
             <div
-              className="hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] flex items-center justify-center h-[32px] w-[32px] cursor-col-resize"
+              className="hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] flex-center h-[32px] w-[32px] cursor-col-resize"
               onClick={() => setIsCollapsed(!isCollapsed)}
             >
               <Image src={SideIcon} alt="toggle sidebar" />
@@ -57,7 +57,7 @@ const Sidebar = () => {
             onClick={() => setIsCollapsed(!isCollapsed)}
           >
             {/* Logo (visible by default, hidden on hover) */}
-            <div className="absolute inset-0 flex items-center justify-center group-hover:hidden p-1 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] cursor-pointer">
+            <div className="absolute inset-0 flex-center group-hover:hidden p-1 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] cursor-pointer">
               <Image src={Logo} alt="logo" style={{ minHeight: 32, minWidth: 32, maxHeight: 32, maxWidth: 32 }} />
             </div>
 
@@ -76,13 +76,13 @@ const Sidebar = () => {
         ))}
       </div>
       <motion.div animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}
-        className="flex flex-col">
+        className="flex flex-col mt-1">
         {links.slice(3, 5).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
       </motion.div>
       <motion.div animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}
-        className="flex flex-col">
+        className="flex flex-col mt-1">
         {links.slice(5).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}

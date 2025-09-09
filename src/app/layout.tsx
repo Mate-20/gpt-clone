@@ -21,8 +21,9 @@ export default function RootLayout({
         <div className="h-[100vh]">
           <Sidebar />
         </div>
-
-        {children}
+        <div className="w-full">
+          {children}
+        </div>
       </body>
     </html>
   );

@@ -11,7 +11,7 @@ interface Props {
 
 const SidebarElement = ({ icon, name, isClosed }: Props) => {
   return (
-    <div className="flex items-center gap-2 p-2 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] cursor-pointer">
+    <div className="flex items-center gap-[6px] p-2 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] cursor-pointer">
       <Image src={icon} alt="icon" width={20} height={20} />
       {/* animate text hide/show */}
       <motion.div
