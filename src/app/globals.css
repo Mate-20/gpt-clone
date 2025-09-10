@@ -50,3 +50,25 @@ body {
   color: var(--primary-text);
   background-color: var(--primary-bg);
 }
+::-webkit-scrollbar {
+  width: 6px; /* Adjust width of the vertical scrollbar */
+  height: 10px; /* Adjust height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Background color of the scrollbar track */
+  border-radius: 5px; /* Rounded corners for the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #5d5d5d; /* Color of the scrollbar thumb (the draggable part) */
+  border-radius: 5px; /* Rounded corners for the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #dbdbdb; /* Color of the thumb on hover */
+}
+
+::-webkit-scrollbar-corner {
+  background: #f1f1f1; /* Color of the corner where scrollbars meet */
+}
