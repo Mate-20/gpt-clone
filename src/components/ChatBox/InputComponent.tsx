@@ -15,7 +15,7 @@ const InputComponent = ({ setInputPrompt, inputPromt }: Props) => {
     <div className='rounded-[var(--border-radius-450)] bg-[var(--secondary-hover-bg)] py-3 px-3 border 
     border-[#343434] flex flex-col max-w-[640px] md:max-w-[750px] w-full gap-4'>
       {/* Input Field */}
-      <input placeholder='Ask anything' className='bg-transparent px-2 focus:outline-none placeholder:text-[var(--secondary-text)]' onChange={(e) => setInputPrompt(e.target.value)} value={inputPromt}/>
+      <input placeholder='Ask anything' className='bg-transparent px-2 focus:outline-none placeholder:text-[var(--secondary-text)]' onChange={(e) => setInputPrompt(e.target.value)} value={inputPromt} autoFocus/>
 
       {/* Input Feature Icons */}
       <div className='flex items-center justify-between'>
