@@ -8,12 +8,13 @@ import { useSidebar } from '@/context/SidebarContext'
 import { useModal } from '@/context/ModalBackgroundContext'
 
 const Navbar = () => {
-  const {setIsSidebarOpen} = useSidebar();
+  const {setIsSidebarOpen, setIsCollapsed} = useSidebar();
   const {setIsModalOpen} = useModal();
   
   const handleToggle=() => {
     setIsSidebarOpen(true);
     setIsModalOpen(true);
+    setIsCollapsed(false);
   }
   return (
     <div className='w-full flex items-center justify-between p-2'>
