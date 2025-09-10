@@ -36,7 +36,7 @@ const InputComponent = ({ setInputPrompt, inputPromt }: Props) => {
 
   return (
     <div className='rounded-[var(--border-radius-450)] bg-[var(--secondary-hover-bg)] py-3 px-3 border 
-    border-[#343434] flex flex-col max-w-[640px] md:max-w-[750px] w-full '>
+    border-[#343434] flex flex-col max-w-[640px] md:max-w-[760px] w-full '>
       {/* Input Field */}
       <textarea
         ref={textareaRef}
