@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import Navbar from "@/components/Navbar/Navbar";
+import { SidebarProvider } from "@/context/SidebarContext";
+import { ModalProvider } from "@/context/ModalBackgroundContext";
+import ModalBlackScreen from "@/components/ModalBlackScreen";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,16 +19,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`flex`}
-      >
-        <div className="h-[100vh]">
-          <Sidebar />
-        </div>
-        <div className="w-full">
-          {children}
-        </div>
-      </body>
+      <SidebarProvider>
+        <ModalProvider>
+          <body
+            className={`flex`}
+          >
+            <div className="h-[100vh]">
+              <Sidebar />
+            </div>
+            <ModalBlackScreen/>
+            <div className="w-full flex flex-col">
+              <Navbar />
+              {children}
+            </div>
+          </body>
+        </ModalProvider>
+      </SidebarProvider>
     </html>
   );
 }

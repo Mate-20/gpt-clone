@@ -11,6 +11,9 @@ import FolderIcon from '@/public/icons/FolderIcon.svg'
 import Image from 'next/image'
 import SidebarElement from './SidebarElement'
 import { motion } from 'framer-motion'
+import { useSidebar } from '@/context/SidebarContext'
+import { DismissRegular } from '@fluentui/react-icons'
+import { useModal } from '@/context/ModalBackgroundContext'
 
 const Sidebar = () => {
   const links = [
@@ -22,14 +25,30 @@ const Sidebar = () => {
     { name: "Projects", href: "/dashboard/settings", icon: FolderIcon },
   ];
 
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const { toggleSidebar, isCollapsed, isSidebarOpen, setIsSidebarOpen } = useSidebar()
+  const { setIsModalOpen } = useModal()
 
+  const handleCloseNavbar = () => {
+    setIsModalOpen(false);
+    setIsSidebarOpen(false);
+  }
   return (
     <motion.aside
-      animate={{ width: isCollapsed ? 52 : 260 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`${isCollapsed ? "bg-[var(--primary-bg)] border-r border-[var(--border-color)]" : "bg-[var(--secondary-bg)]"}  h-[100vh] flex-col gap-3 px-2 pt-2 overflow-hidden hidden md:flex`}
+      animate={{
+        width: isCollapsed  ? 52 : 260,
+        backgroundColor: isCollapsed
+          ? "var(--primary-bg)"
+          : "var(--secondary-bg)",
+      }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className={`
+      h-[100vh] flex-col gap-4 px-2 pt-2 overflow-hidden 
+      border-r border-[var(--border-color)] z-50 top-0 left-0
+      ${isSidebarOpen ? "absolute flex" : "hidden"}   // toggle via context
+      md:flex                 // always show on md+ screens
+    `}
     >
+
       {/* top logo + toggle */}
       <div className="flex items-center justify-between">
         {/* Expanded state */}
@@ -42,19 +61,22 @@ const Sidebar = () => {
                 style={{ minHeight: 32, minWidth: 32, maxHeight: 32, maxWidth: 32 }}
               />
             </div>
-            <div
+            {!isSidebarOpen ? <div
               className="hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] flex-center h-[32px] w-[32px] cursor-col-resize"
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={toggleSidebar}
             >
               <Image src={SideIcon} alt="toggle sidebar" />
             </div>
+              :
+              <div onClick={handleCloseNavbar} className='mb-1'><DismissRegular fontSize={18} /></div>
+            }
           </>
         )}
         {/* Collapsed state */}
         {isCollapsed && (
           <div
             className="relative group h-[38px] w-[38px]"
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={toggleSidebar}
           >
             {/* Logo (visible by default, hidden on hover) */}
             <div className="absolute inset-0 flex-center group-hover:hidden p-1 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-200)] cursor-pointer">
@@ -70,19 +92,19 @@ const Sidebar = () => {
       </div>
 
       {/* grouped links */}
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-[2px]">
         {links.slice(0, 3).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
       </div>
       <motion.div animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}
-        className="flex flex-col mt-1">
+        className="flex flex-col mt-1 gap-[2px]">
         {links.slice(3, 5).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
       </motion.div>
       <motion.div animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}
-        className="flex flex-col mt-1">
+        className="flex flex-col mt-1 gap-[2px]">
         {links.slice(5).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
