@@ -46,8 +46,7 @@ const Sidebar = () => {
           : "var(--secondary-bg)",
       }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
-      className={`
-      h-[100vh] flex-col gap-4 px-2 pt-2 overflow-hidden 
+      className={`h-full flex-col gap-4 px-2 pt-2 overflow-hidden 
       border-r border-[var(--border-color)] z-50 top-0 left-0
       ${isSidebarOpen ? "absolute flex" : "hidden"}   // toggle via context
       md:flex                 // always show on md+ screens

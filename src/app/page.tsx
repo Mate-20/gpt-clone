@@ -7,8 +7,8 @@ export default function Home() {
 
   const [inputPromt, setInputPrompt] = useState("");
   return (
-    <div className="h-full w-full">
-      <ChatBox setInputPrompt={setInputPrompt} inputPromt={inputPromt}/>
+    <div className="h-[94%] w-full flex flex-col">
+      <ChatBox setInputPrompt={setInputPrompt} inputPromt={inputPromt} />
     </div>
   );
 }

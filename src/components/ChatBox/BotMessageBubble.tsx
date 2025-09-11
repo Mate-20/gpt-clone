@@ -64,7 +64,7 @@ const AssistantMessage = ({ message, onCopy, onLike, onDislike, onShare, onRegen
                 const match = /language-(\w+)/.exec(className || "");
                 if (match) {
                   return (
-                    <pre className="rounded-lg bg-black/80 p-4 overflow-x-auto my-3">
+                    <pre className="rounded-lg text-[14px] bg-black/80 p-4 overflow-x-auto my-3">
                       <code className={`language-${match[1]}`} {...props}>
                         {children}
                       </code>

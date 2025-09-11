@@ -26,11 +26,11 @@ export default function RootLayout({
             <body
               className={`flex`}
             >
-              <div className="h-[100vh]">
+              <div className="h-[100dvh]">
                 <Sidebar />
               </div>
               <ModalBlackScreen />
-              <div className="w-full flex flex-col">
+              <div className="w-full flex flex-col max-h-[100dvh]">
                 <Navbar />
                 {children}
               </div>
