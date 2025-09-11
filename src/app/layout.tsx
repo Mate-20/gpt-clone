@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ModalProvider } from "@/context/ModalBackgroundContext";
 import ModalBlackScreen from "@/components/ModalBlackScreen";
+import { ChatProvider } from "@/context/ChatContext";
 
 export const metadata: Metadata = {
   title: "ChatGPT",
@@ -19,22 +20,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SidebarProvider>
-        <ModalProvider>
-          <body
-            className={`flex`}
-          >
-            <div className="h-[100vh]">
-              <Sidebar />
-            </div>
-            <ModalBlackScreen/>
-            <div className="w-full flex flex-col">
-              <Navbar />
-              {children}
-            </div>
-          </body>
-        </ModalProvider>
-      </SidebarProvider>
+      <ChatProvider>
+        <SidebarProvider>
+          <ModalProvider>
+            <body
+              className={`flex`}
+            >
+              <div className="h-[100vh]">
+                <Sidebar />
+              </div>
+              <ModalBlackScreen />
+              <div className="w-full flex flex-col">
+                <Navbar />
+                {children}
+              </div>
+            </body>
+          </ModalProvider>
+        </SidebarProvider>
+      </ChatProvider>
     </html>
   );
 }

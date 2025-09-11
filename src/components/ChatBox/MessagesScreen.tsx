@@ -1,21 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AssistantMessage from './BotMessageBubble';
 import UserMessageBubble from './UserMessageBubble';
 import ActionButton from './ActionButton';
 import ChatLoader from '../ChatLoader';
 
+type Message = {
+  id: string;
+  role: "user" | "assistant" | "assistant-temp";
+  content: string;
+};
+
 interface Props {
-  chatMessages: any[];
+  chatMessages: Message[];
   assistantMessageLoader: boolean
 }
 
 // Main Chat Messages Component
 const MessagesScreen = ({ chatMessages, assistantMessageLoader }: Props) => {
 
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  // Scroll into view whenever messages change
   useEffect(() => {
-    console.log("📩 Updated messages:", chatMessages);
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
-
   const [notification, setNotification] = useState('');
 
   const showNotification = (message: string) => {
@@ -84,8 +91,9 @@ const MessagesScreen = ({ chatMessages, assistantMessageLoader }: Props) => {
         {assistantMessageLoader && <div className='w-full'>
           <ChatLoader />
         </div>}
-
       </div>
+      {/* invisible anchor for scrolling */}
+      <div ref={bottomRef} />
     </div>
   );
 };

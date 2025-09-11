@@ -14,8 +14,10 @@ import { motion } from 'framer-motion'
 import { useSidebar } from '@/context/SidebarContext'
 import { DismissRegular } from '@fluentui/react-icons'
 import { useModal } from '@/context/ModalBackgroundContext'
+import { useChat } from '@/context/ChatContext'
 
 const Sidebar = () => {
+  const { setMessages } = useChat()
   const links = [
     { name: "New chat", href: "/dashboard/profile", icon: NewChatIcon },
     { name: "Search chats", href: "/dashboard/events", icon: SearchIcon },
@@ -32,10 +34,13 @@ const Sidebar = () => {
     setIsModalOpen(false);
     setIsSidebarOpen(false);
   }
+  const handleNewChat = (type : string) => {
+    if(type === "New chat") setMessages([]);
+  }
   return (
     <motion.aside
       animate={{
-        width: isCollapsed  ? 52 : 260,
+        width: isCollapsed ? 52 : 260,
         backgroundColor: isCollapsed
           ? "var(--primary-bg)"
           : "var(--secondary-bg)",
@@ -94,7 +99,9 @@ const Sidebar = () => {
       {/* grouped links */}
       <div className="flex flex-col">
         {links.slice(0, 3).map((link, key) => (
-          <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
+          <div onClick={()=>handleNewChat(link.name)}>
+            <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
+          </div>
         ))}
       </div>
       <motion.div animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}

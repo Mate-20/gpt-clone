@@ -3,19 +3,16 @@ import InputComponent from './InputComponent'
 import MessagesScreen from './MessagesScreen';
 import { sampleMessages } from '@/public/data/chats';
 import { a } from 'framer-motion/client';
+import { useChat } from '@/context/ChatContext';
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
   inputPromt: string;
 }
-type ChatMessage = {
-  id: string;
-  role: "user" | "assistant" | "system";
-  content: string;
-};
+
 const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { messages, setMessages } = useChat();
   const [assistantMessageLoader, setAssistantMessageLoader] = useState(false);
 
   return (
