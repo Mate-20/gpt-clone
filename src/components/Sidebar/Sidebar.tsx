@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import Logo from '@/public/gpt_logo.png'
-import SideIcon from '@/public/icons/sidebaricon.svg'
+import SideIcon from '@/public/icons/sidebarIcon.svg'
 import LibraryIcon from '@/public/icons/LibraryIcon.svg'
 import ModelsIcon from '@/public/icons/ModelsIcon.svg'
 import NewChatIcon from '@/public/icons/NewChatIcon.svg'
