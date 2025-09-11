@@ -10,7 +10,7 @@ interface Props {
 }
 
 // Main Chat Messages Component
-const MessagesScreen = ({ chatMessages,assistantMessageLoader }: Props) => {
+const MessagesScreen = ({ chatMessages, assistantMessageLoader }: Props) => {
 
   useEffect(() => {
     console.log("📩 Updated messages:", chatMessages);
@@ -81,7 +81,10 @@ const MessagesScreen = ({ chatMessages,assistantMessageLoader }: Props) => {
             />
           )
         ))}
-        <ChatLoader/>
+        {assistantMessageLoader && <div className='w-full'>
+          <ChatLoader />
+        </div>}
+
       </div>
     </div>
   );

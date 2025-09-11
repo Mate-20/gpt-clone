@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import InputComponent from './InputComponent'
 import MessagesScreen from './MessagesScreen';
 import { sampleMessages } from '@/public/data/chats';
+import { a } from 'framer-motion/client';
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
