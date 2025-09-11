@@ -92,19 +92,19 @@ const Sidebar = () => {
       </div>
 
       {/* grouped links */}
-      <div className="flex flex-col gap-[2px]">
+      <div className="flex flex-col">
         {links.slice(0, 3).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
       </div>
       <motion.div animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}
-        className="flex flex-col mt-1 gap-[2px]">
+        className="flex flex-col mt-1">
         {links.slice(3, 5).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
       </motion.div>
       <motion.div animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}
-        className="flex flex-col mt-1 gap-[2px]">
+        className="flex flex-col mt-1">
         {links.slice(5).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}

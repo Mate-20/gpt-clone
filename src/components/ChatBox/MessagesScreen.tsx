@@ -1,45 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AssistantMessage from './BotMessageBubble';
 import UserMessageBubble from './UserMessageBubble';
 import ActionButton from './ActionButton';
+import ChatLoader from '../ChatLoader';
 
 interface Props {
-  chatMessages : any[];
+  chatMessages: any[];
+  assistantMessageLoader: boolean
 }
 
 // Main Chat Messages Component
-const MessagesScreen = ({ chatMessages}: Props) => {
-  const [messages] = useState(chatMessages);
+const MessagesScreen = ({ chatMessages,assistantMessageLoader }: Props) => {
+
+  useEffect(() => {
+    console.log("📩 Updated messages:", chatMessages);
+  }, [chatMessages]);
+
   const [notification, setNotification] = useState('');
 
-  const showNotification = (message : string) => {
+  const showNotification = (message: string) => {
     setNotification(message);
     setTimeout(() => setNotification(''), 2000);
   };
 
-  const handleEdit = (messageId : string, newContent : string) => {
+  const handleEdit = (messageId: string, newContent: string) => {
     console.log('Edit message:', messageId, newContent);
     showNotification('Message edited!');
   };
 
-  const handleCopy = (message : string) => {
+  const handleCopy = (message: string) => {
     showNotification(message);
   };
 
-  const handleLike = (messageId : string, liked : any) => {
+  const handleLike = (messageId: string, liked: any) => {
     // console.log('Like message:', messageId, liked);
   };
 
-  const handleDislike = (messageId : string, dislike : any) => {
+  const handleDislike = (messageId: string, dislike: any) => {
     // console.log('Dislike message:', messageId, disliked);
   };
 
-  const handleShare = (content : any) => {
+  const handleShare = (content: any) => {
     // console.log('Share content:', content);
     // showNotification('Content shared!');
   };
 
-  const handleRegenerate = (messageId : string) => {
+  const handleRegenerate = (messageId: string) => {
     // console.log('Regenerate message:', messageId);
     // showNotification('Regenerating response...');
   };
@@ -55,7 +61,7 @@ const MessagesScreen = ({ chatMessages}: Props) => {
 
       {/* Messages */}
       <div className="w-full pb-[80px]">
-        {messages.map((message) => (
+        {chatMessages.map((message) => (
           message.role === 'user' ? (
             <UserMessageBubble
               key={message.id}
@@ -75,6 +81,7 @@ const MessagesScreen = ({ chatMessages}: Props) => {
             />
           )
         ))}
+        <ChatLoader/>
       </div>
     </div>
   );

@@ -13,13 +13,112 @@ interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
   inputPromt: string;
   onSend?: (message: string, files: UploadedFile[]) => void;
+  setMessages: React.Dispatch<React.SetStateAction<any[]>>;
+  messages: any[];
+  setAssistantMessageLoader: (value: boolean) => void;
 }
 
-const InputComponent = ({ setInputPrompt, inputPromt, onSend }: Props) => {
+const InputComponent = ({ setInputPrompt, inputPromt, onSend, setMessages, messages, setAssistantMessageLoader }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const baseHeight = 28;
 
+  // const sendMessage = async (inputMessage: string) => {
+  //   const newMessage = {
+  //     id: crypto.randomUUID(),
+  //     role: "user" as const,
+  //     content: inputMessage,
+  //   };
+
+  //   const updatedMessages = [...messages, newMessage];
+  //   setMessages(updatedMessages);
+
+  //   const res = await fetch("/api/chat", {
+  //     method: "POST",
+  //     body: JSON.stringify({ messages: updatedMessages }),
+  //   });
+
+  //   if (!res.ok) {
+  //     console.error("Chat request failed");
+  //     return;
+  //   }
+
+  //   const reader = res.body?.getReader();
+  //   const decoder = new TextDecoder();
+  //   if (!reader) return;
+
+  //   const tempId = crypto.randomUUID();
+  //   let botReply = "";
+
+  //   while (true) {
+  //     const { done, value } = await reader.read();
+  //     if (done) break;
+
+  //     botReply += decoder.decode(value, { stream: true });
+
+  //     setMessages((prev) => [
+  //       ...prev.filter((m) => m.id !== tempId), // filter by ID only
+  //       { id: tempId, role: "assistant", content: botReply },
+  //     ]);
+  //   }
+
+  //   // Finalize assistant message (ensure last chunk is stored)
+  //   setMessages((prev) => [
+  //     ...prev.filter((m) => m.id !== tempId),
+  //     { id: tempId, role: "assistant", content: botReply },
+  //   ]);
+  // };
+
   // File upload hook
+  const sendMessage = async (inputMessage: string) => {
+    setAssistantMessageLoader(true);
+    const userMessage = {
+      id: crypto.randomUUID(),
+      role: "user" as const,
+      content: inputMessage,
+    };
+
+    // show user’s message in chat
+    setMessages((prev) => [...prev, userMessage]);
+
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: [userMessage], // 👈 send only the current prompt
+      }),
+    });
+
+    if (!res.ok) {
+      console.error("Chat request failed");
+      return;
+    }
+
+    const reader = res.body?.getReader();
+    const decoder = new TextDecoder();
+    if (!reader) return;
+
+    const tempId = crypto.randomUUID();
+    let botReply = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      botReply += decoder.decode(value, { stream: true });
+
+      setMessages((prev) => [
+        ...prev.filter((m) => m.id !== tempId),
+        { id: tempId, role: "assistant", content: botReply },
+      ]);
+    }
+
+    // Finalize assistant message
+    setMessages((prev) => [
+      ...prev.filter((m) => m.id !== tempId),
+      { id: tempId, role: "assistant", content: botReply },
+    ]);
+    setAssistantMessageLoader(false);
+  };
+
   const {
     uploadedFiles,
     isUploading,
@@ -53,39 +152,31 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend }: Props) => {
   // };
 
   const handleSend = () => {
-    if (inputPromt.trim() || hasFiles) {
-      onSend?.(inputPromt.trim(), uploadedFiles);
-      setInputPrompt('');
-      clearFiles();
-      
-      // Reset textarea height
-      if (textareaRef.current) {
-        textareaRef.current.style.height = `${baseHeight}px`;
-      }
-    }
+    // if (inputPromt.trim() || hasFiles) {
+    //   onSend?.(inputPromt.trim(), uploadedFiles);
+    //   setInputPrompt('');
+    //   clearFiles();
+
+    //   // Reset textarea height
+    //   if (textareaRef.current) {
+    //     textareaRef.current.style.height = `${baseHeight}px`;
+    //   }
+    // }
+    sendMessage(inputPromt);
+    setInputPrompt('')
   };
 
   const handleFilesSelected = async (files: FileList) => {
     await addFiles(files);
   };
 
-  // useEffect(() => {
-  //   // run once on mount to adjust if there's already text
-  //   if (textareaRef.current) {
-  //     textareaRef.current.style.height = "auto";
-  //     // const newHeight = Math.max(baseHeight, textareaRef.current.scrollHeight);
-  //     // console.log("newHeight", newHeight);
-  //     textareaRef.current.style.height = `${Math.min(newHeight, 200)}px`;
-  //   }
-  // }, []);
-
   // Check if send button should be enabled
   const canSend = (inputPromt.trim().length > 0 || hasFiles) && !isUploading;
 
   return (
-    <div className='rounded-[var(--border-radius-450)] bg-[var(--secondary-hover-bg)] py-3 px-3 border 
-    border-[#343434] flex flex-col max-w-[640px] md:max-w-[760px] w-full'>
-      
+    <form className='rounded-[var(--border-radius-450)] bg-[var(--secondary-hover-bg)] py-3 px-3 border 
+    border-[#343434] flex flex-col max-w-[640px] md:max-w-[760px] w-full' onSubmit={(e) => { e.preventDefault(); handleSend(); }}>
+
       {/* Error message */}
       {error && (
         <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-md">
@@ -147,7 +238,7 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend }: Props) => {
             onFilesSelected={handleFilesSelected}
             disabled={isUploading}
           />
-          
+
           {/* Tools Button */}
           <div className='flex items-center gap-2 p-2 hover:bg-[var(--primary-hover-bg)] rounded-full cursor-pointer'>
             <Image src={ToolsIcon} alt="tools" />
@@ -160,20 +251,19 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend }: Props) => {
           <div className='p-2 hover:bg-[var(--primary-hover-bg)] rounded-full cursor-pointer'>
             <Image src={MicIcon} alt="mic" className='cursor-pointer' />
           </div>
-          
+
           {/* Send Button */}
           <button
-            onClick={handleSend}
+            type='submit'
             disabled={!canSend}
-            className={`p-2 rounded-full cursor-pointer transition-all duration-200 ${
-              canSend
-                ? "bg-white hover:bg-gray-100" 
-                : "bg-[#858585] cursor-not-allowed"
-            }`}
+            className={`p-2 rounded-full cursor-pointer transition-all duration-200 ${canSend
+              ? "bg-white hover:bg-gray-100"
+              : "bg-[#858585] cursor-not-allowed"
+              }`}
           >
-            <Image 
-              src={UpArrowIcon} 
-              alt="Send" 
+            <Image
+              src={UpArrowIcon}
+              alt="Send"
               className={`${canSend ? '' : 'opacity-50'}`}
             />
           </button>
@@ -184,7 +274,7 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend }: Props) => {
       {/* <div className="text-xs text-gray-500 mt-1 text-center">
         Supports images, PDFs, documents up to 25MB each
       </div> */}
-    </div>
+    </form>
   )
 }
 

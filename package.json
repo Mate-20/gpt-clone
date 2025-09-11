@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^2.0.13",
     "@fluentui/react-icons": "^2.0.297",
+    "ai": "^5.0.40",
     "framer-motion": "^12.6.3",
     "highlight.js": "^11.11.1",
     "lucide-react": "^0.543.0",
@@ -18,7 +20,8 @@
     "react-dom": "^18",
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "zod": "^4.1.7"
   },
   "devDependencies": {
     "@types/node": "^20",
