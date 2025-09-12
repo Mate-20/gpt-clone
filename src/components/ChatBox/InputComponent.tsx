@@ -154,8 +154,9 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Pro
             disabled={!canSend}
             className={`p-2 rounded-full cursor-pointer transition-all duration-200 ${canSend
               ? "bg-white hover:bg-gray-100"
-              : "bg-[#858585] cursor-not-allowed"
+              : "bg-[#858585]"
               }`}
+            style={{cursor: canSend ? 'pointer' : 'not-allowed'}}
           >
             <Image
               src={UpArrowIcon}

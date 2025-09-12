@@ -17,7 +17,7 @@ import { useModal } from '@/context/ModalBackgroundContext'
 import { useChat } from '@/context/ChatContext'
 
 const Sidebar = () => {
-  const { setMessages } = useChat()
+  const { setMessages, messages } = useChat()
   const links = [
     { name: "New chat", href: "/dashboard/profile", icon: NewChatIcon },
     { name: "Search chats", href: "/dashboard/events", icon: SearchIcon },
@@ -114,6 +114,14 @@ const Sidebar = () => {
         {links.slice(5).map((link, key) => (
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
+      </motion.div>
+      <motion.div 
+      initial={{opacity : 0}}
+      animate={{opacity : messages.length > 0 ? 1 : 0}}
+      transition={{duration : 0.2}}
+      className='flex flex-col gap-[6px]'>
+        <span className='text-[14px] text-[var(--secondary-text)] pl-[9px]'>Chats</span>
+        <div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div>
       </motion.div>
     </motion.aside>
   );
