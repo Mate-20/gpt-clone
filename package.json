@@ -11,6 +11,7 @@
   "dependencies": {
     "@ai-sdk/google": "^2.0.13",
     "@fluentui/react-icons": "^2.0.297",
+    "@uploadcare/upload-client": "^6.17.0",
     "ai": "^5.0.40",
     "framer-motion": "^12.6.3",
     "highlight.js": "^11.11.1",

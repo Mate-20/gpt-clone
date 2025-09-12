@@ -3,11 +3,9 @@ import ActionButton from './ActionButton';
 import {
   Copy,
   Edit3,
-  Check,
-  X,
-  User,
-
 } from 'lucide-react';
+import Image from 'next/image';
+import { s } from 'framer-motion/client';
 interface UserMessageBubbleProps {
   message: any;
   onEdit: (id: string, newContent: string) => void;
@@ -37,10 +35,17 @@ const UserMessageBubble = ({ message, onEdit, onCopy }: UserMessageBubbleProps) 
     onCopy('Message copied!');
   };
 
+  const handleHover = () => {
+    if(message.content.includes("1z66y5vt2h.ucarecd.net")){
+      return;
+    }else{
+      setIsHovered(true);
+    }
+  }
   return (
     <div className="flex justify-end mb-2 group w-full">
       <div className="flex flex-col items-end space-x-3 w-full"
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={handleHover}
         onMouseLeave={() => setIsHovered(false)}>
         {/* Message content */}
         <div className={`relative ${isEditing ? "w-full" : "max-w-[80%]"}`}>
@@ -59,6 +64,9 @@ const UserMessageBubble = ({ message, onEdit, onCopy }: UserMessageBubbleProps) 
               </div>
             </div>
           ) : (
+            message.content.includes("ucarecd.net")?(
+              <Image src={message.content} alt="image" width={200} height={200} className='rounded-2xl'/>
+            ):
             <div className="bg-[var(--secondary-hover-bg)] text-white rounded-2xl px-4 py-3 whitespace-pre-wrap w-full">
               {message.content}
             </div>

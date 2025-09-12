@@ -5,7 +5,6 @@ export const sendMessageService = async (
   onMessage: (partial: string) => void
 ) => {
   const userMessage = {
-    // id: crypto.randomUUID(),
     role: "user" as const,
     content: inputMessage,
   };
