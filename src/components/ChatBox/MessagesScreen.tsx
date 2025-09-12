@@ -13,10 +13,11 @@ type Message = {
 interface Props {
   chatMessages: Message[];
   assistantMessageLoader: boolean
+  handleEdit: (messageId: string, newContent: string) => void;
 }
 
 // Main Chat Messages Component
-const MessagesScreen = ({ chatMessages, assistantMessageLoader }: Props) => {
+const MessagesScreen = ({ chatMessages, assistantMessageLoader,handleEdit }: Props) => {
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   // Scroll into view whenever messages change
@@ -28,11 +29,6 @@ const MessagesScreen = ({ chatMessages, assistantMessageLoader }: Props) => {
   const showNotification = (message: string) => {
     setNotification(message);
     setTimeout(() => setNotification(''), 2000);
-  };
-
-  const handleEdit = (messageId: string, newContent: string) => {
-    console.log('Edit message:', messageId, newContent);
-    showNotification('Message edited!');
   };
 
   const handleCopy = (message: string) => {

@@ -98,7 +98,7 @@ const Sidebar = () => {
       {/* grouped links */}
       <div className="flex flex-col">
         {links.slice(0, 3).map((link, key) => (
-          <div onClick={()=>handleNewChat(link.name)}>
+          <div onClick={()=>handleNewChat(link.name)} key={key}>
             <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
           </div>
         ))}

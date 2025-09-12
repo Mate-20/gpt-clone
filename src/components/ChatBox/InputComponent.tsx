@@ -1,5 +1,5 @@
 // components/InputComponent.tsx
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import Image from 'next/image'
 import ToolsIcon from "@/public/icons/ToolsIcon.svg"
 import MicIcon from "@/public/icons/MicIcon.svg"
@@ -16,108 +16,12 @@ interface Props {
   setMessages: React.Dispatch<React.SetStateAction<any[]>>;
   messages: any[];
   setAssistantMessageLoader: (value: boolean) => void;
+  sendMessage: (inputMessage: string) => Promise<void>;
 }
 
-const InputComponent = ({ setInputPrompt, inputPromt, onSend, setMessages, messages, setAssistantMessageLoader }: Props) => {
+const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const baseHeight = 28;
-
-  // const sendMessage = async (inputMessage: string) => {
-  //   const newMessage = {
-  //     id: crypto.randomUUID(),
-  //     role: "user" as const,
-  //     content: inputMessage,
-  //   };
-
-  //   const updatedMessages = [...messages, newMessage];
-  //   setMessages(updatedMessages);
-
-  //   const res = await fetch("/api/chat", {
-  //     method: "POST",
-  //     body: JSON.stringify({ messages: updatedMessages }),
-  //   });
-
-  //   if (!res.ok) {
-  //     console.error("Chat request failed");
-  //     return;
-  //   }
-
-  //   const reader = res.body?.getReader();
-  //   const decoder = new TextDecoder();
-  //   if (!reader) return;
-
-  //   const tempId = crypto.randomUUID();
-  //   let botReply = "";
-
-  //   while (true) {
-  //     const { done, value } = await reader.read();
-  //     if (done) break;
-
-  //     botReply += decoder.decode(value, { stream: true });
-
-  //     setMessages((prev) => [
-  //       ...prev.filter((m) => m.id !== tempId), // filter by ID only
-  //       { id: tempId, role: "assistant", content: botReply },
-  //     ]);
-  //   }
-
-  //   // Finalize assistant message (ensure last chunk is stored)
-  //   setMessages((prev) => [
-  //     ...prev.filter((m) => m.id !== tempId),
-  //     { id: tempId, role: "assistant", content: botReply },
-  //   ]);
-  // };
-
-  // File upload hook
-  const sendMessage = async (inputMessage: string) => {
-    setAssistantMessageLoader(true);
-    const userMessage = {
-      id: crypto.randomUUID(),
-      role: "user" as const,
-      content: inputMessage,
-    };
-
-    // show user’s message in chat
-    setMessages((prev) => [...prev, userMessage]);
-
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      body: JSON.stringify({
-        messages: [userMessage], // 👈 send only the current prompt
-      }),
-    });
-
-    if (!res.ok) {
-      console.error("Chat request failed");
-      return;
-    }
-
-    const reader = res.body?.getReader();
-    const decoder = new TextDecoder();
-    if (!reader) return;
-
-    const tempId = crypto.randomUUID();
-    let botReply = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      botReply += decoder.decode(value, { stream: true });
-
-      setMessages((prev) => [
-        ...prev.filter((m) => m.id !== tempId),
-        { id: tempId, role: "assistant", content: botReply },
-      ]);
-    }
-
-    // Finalize assistant message
-    setMessages((prev) => [
-      ...prev.filter((m) => m.id !== tempId),
-      { id: tempId, role: "assistant", content: botReply },
-    ]);
-    setAssistantMessageLoader(false);
-  };
 
   const {
     uploadedFiles,
@@ -152,18 +56,10 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, setMessages, messa
   // };
 
   const handleSend = () => {
-    // if (inputPromt.trim() || hasFiles) {
-    //   onSend?.(inputPromt.trim(), uploadedFiles);
-    //   setInputPrompt('');
-    //   clearFiles();
-
-    //   // Reset textarea height
-    //   if (textareaRef.current) {
-    //     textareaRef.current.style.height = `${baseHeight}px`;
-    //   }
-    // }
-    sendMessage(inputPromt);
-    setInputPrompt('')
+    if (inputPromt.trim().length > 0) {
+      sendMessage(inputPromt);
+      setInputPrompt('')
+    }
   };
 
   const handleFilesSelected = async (files: FileList) => {

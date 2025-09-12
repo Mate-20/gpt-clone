@@ -9,15 +9,15 @@ type Message = {
 };
 
 type ChatContextType = {
-  messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  messages: any[];
+  setMessages: React.Dispatch<React.SetStateAction<any[]>>;
   clearMessages: () => void;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
 
   const clearMessages = () => setMessages([]);
 

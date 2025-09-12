@@ -55,7 +55,7 @@ const AssistantMessage = ({ message, onCopy, onLike, onDislike, onShare, onRegen
     <div className="flex justify-start mb-4 group">
       <div className="flex items-start space-x-3 max-w-[90%]">
         {/* Message content */}
-        <div className="relative flex flex-col gap-3 max-w-[90%] overflow-x-scroll">
+        <div className="relative flex flex-col gap-3 w-full overflow-x-scroll">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeHighlight]}
