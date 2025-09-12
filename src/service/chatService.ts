@@ -1,10 +1,11 @@
 // services/chatService.ts
+
 export const sendMessageService = async (
   inputMessage: string,
   onMessage: (partial: string) => void
 ) => {
   const userMessage = {
-    id: crypto.randomUUID(),
+    // id: crypto.randomUUID(),
     role: "user" as const,
     content: inputMessage,
   };
