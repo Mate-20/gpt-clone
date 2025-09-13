@@ -32,30 +32,30 @@ const AssistantMessage = ({ message, onCopy, onLike, onDislike, onShare, onRegen
   };
 
   const handleLike = () => {
-    setLiked(!liked);
-    setDisliked(false);
-    onLike(message.id, !liked);
+    // setLiked(!liked);
+    // setDisliked(false);
+    // onLike(message.id, !liked);
   };
 
   const handleDislike = () => {
-    setDisliked(!disliked);
-    setLiked(false);
-    onDislike(message.id, !disliked);
+    // setDisliked(!disliked);
+    // setLiked(false);
+    // onDislike(message.id, !disliked);
   };
 
   const handleShare = () => {
-    onShare(message.content);
+    // onShare(message.content);
   };
 
   const handleRegenerate = () => {
-    onRegenerate(message.id);
+    // onRegenerate(message.id);
   };
 
   return (
     <div className="flex justify-start mb-4 group">
-      <div className="flex items-start space-x-3 max-w-[90%]">
+      <div className="flex items-start space-x-3">
         {/* Message content */}
-        <div className="relative flex flex-col gap-3 w-full overflow-x-scroll">
+        <div className="relative flex flex-col gap-3 w-full">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeHighlight]}
@@ -64,7 +64,7 @@ const AssistantMessage = ({ message, onCopy, onLike, onDislike, onShare, onRegen
                 const match = /language-(\w+)/.exec(className || "");
                 if (match) {
                   return (
-                    <pre className="rounded-lg text-[14px] bg-black/80 p-4 overflow-x-auto my-3">
+                    <pre className="rounded-lg text-[14px] bg-black/80 p-4 overflow-x-auto my-3 max-w-[90%]">
                       <code className={`language-${match[1]}`} {...props}>
                         {children}
                       </code>
