@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import InputComponent from './InputComponent'
 import MessagesScreen from './MessagesScreen';
 import { sampleMessages } from '@/public/data/chats';
-import { a } from 'framer-motion/client';
+import { a, div } from 'framer-motion/client';
 import { useChat } from '@/context/ChatContext';
 import { sendMessageService } from '@/service/chatService';
 
@@ -87,7 +87,12 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
           <MessagesScreen chatMessages={messages} assistantMessageLoader={assistantMessageLoader} handleEdit={handleEdit} />
         </div>}
       <div className='flex-col-center gap-8 w-full px-3 mb-[60px]'>
-        {messages.length === 0 && <span className='text-[28px] max-[540px]:mb-[30px]'>Ready when you are.</span>}
+        {messages.length === 0 &&
+          <div className='flex flex-col items-center gap-1 w-full'>
+            <span className='text-[28px] max-[540px]:mb-[30px]'>Temporary Chat</span>
+            <span className='text-center tetx-[16px] text-[var(--secondary-text)] w-[220px]'>This chat won't appear in history, use or update ChatGPT's memory, or be used to train our models. For safety purposes, we may keep a copy of this chat for up to 30 days.</span>
+          </div>
+        }
         <div className={`w-[94%] gap-1 flex-col-center max-[540px]:absolute max-[540px]:bottom-3 max-[540px]:w-[94%] ${messages.length > 0 ? 'absolute bottom-3 ' : ''}`}>
           <InputComponent setInputPrompt={setInputPrompt} inputPromt={inputPromt} setMessages={setMessages} messages={messages} setAssistantMessageLoader={setAssistantMessageLoader} sendMessage={sendMessage} />
           <span className='text-[12px] text-center w-[90%]'>ChatGPT can make mistakes. Check important info. See Cookie Preferences.</span>
