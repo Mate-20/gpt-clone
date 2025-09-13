@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import InputComponent from './InputComponent'
 import MessagesScreen from './MessagesScreen';
-import { sampleMessages } from '@/public/data/chats';
-import { a, div } from 'framer-motion/client';
 import { useChat } from '@/context/ChatContext';
 import { sendMessageService } from '@/service/chatService';
 import LimitReached from './LimitReached';
+import mem0 from "@/lib/mem0";
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
@@ -26,7 +25,7 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
   }, [])
   const sendMessage = async (inputMessage: string, editedHistory?: any[]) => {
     if (limitCrossed) return;
-    
+
     setAssistantMessageLoader(true);
     const userMessage = {
       id: crypto.randomUUID(),
@@ -73,15 +72,17 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
     }
   };
 
-  // Setting the limit to 10 with local storage
+  // Setting the limit to 8 with local storage
   useEffect(() => {
-    if (messages.length >= 10) {
+    if (limitCrossed) return
+    if (messages.length >= 8) {
       window.localStorage.setItem('limitCrossed', "true");
       setLimitCrossed(true);
     }
-    const length = messages.filter((m)=>m.role == "user").length
+    const length = messages.filter((m) => m.role == "user").length
     setPromptsLength(length)
   }, [messages])
+
 
   // This function is for editing a message and slicing all the after messages
   const handleEdit = (id: string, editedInput: string) => {
@@ -118,7 +119,7 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
           {limitCrossed && <div className='mb-4 w-full flex justify-center'>
             <LimitReached />
           </div>}
-          <InputComponent setInputPrompt={setInputPrompt} inputPromt={inputPromt} setMessages={setMessages} promptsLength={promptsLength} setAssistantMessageLoader={setAssistantMessageLoader} sendMessage={sendMessage} limitCrossed={limitCrossed}/>
+          <InputComponent setInputPrompt={setInputPrompt} inputPromt={inputPromt} setMessages={setMessages} promptsLength={promptsLength} setAssistantMessageLoader={setAssistantMessageLoader} sendMessage={sendMessage} limitCrossed={limitCrossed} />
           <span className='text-[12px] text-center w-[90%]'>ChatGPT can make mistakes. Check important info. See Cookie Preferences.</span>
         </div>
       </div>

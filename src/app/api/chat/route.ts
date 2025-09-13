@@ -2,7 +2,7 @@ import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 import { NextResponse } from "next/server";
 import mem0 from "@/lib/mem0";
-
+import { cookies } from "next/headers";
 // Load Gemini model
 const model = google("models/gemini-2.0-flash");
 
@@ -13,10 +13,12 @@ export async function POST(req: Request) {
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
-
+    const cookieStore = await cookies();
+    const userIdFromCookie = cookieStore.get('user_id')?.value;
+    
     const memories = mem0.search(
       messages[0].content,
-      { user_id: "akash", limit: 10 },)
+      { user_id: userIdFromCookie, limit: 10 },)
     // Turn them into "system" or "assistant" messages so Gemini sees them
 
     const memoryContext = (await memories).map((m: any) => ({
@@ -36,7 +38,7 @@ export async function POST(req: Request) {
               ...messages, // all user messages you passed in
               { role: "assistant", content: text },
             ],
-            { user_id: "akash" } // replace with real user id if available
+            { user_id: userIdFromCookie } // replace with real user id if available
           );
         } catch (err) {
           console.error("❌ Failed to save to mem0:", err);

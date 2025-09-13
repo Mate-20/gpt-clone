@@ -134,9 +134,9 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage,limitC
             <Image src={ToolsIcon} alt="tools" />
             <span className='text-[14px]'>Tools</span>
           </div>
-          <div className='text-[14px] text-[var(--secondary-text)]'>
-            {limitCrossed ? "5/5 prompts left" : `${promptsLength}/5 prompts left`}
-          </div>
+          {/* <div className='text-[14px] text-[var(--secondary-text)]'>
+            {limitCrossed ? "4/4 prompts left" : `${promptsLength}/4 prompts left`}
+          </div> */}
         </div>
 
         <div className='flex items-center gap-2'>
