@@ -8,18 +8,20 @@ import FileUploadButton from './FileuploadButton'
 import FilePreview from './FilePreview'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { UploadedFile } from '@/types/upload'
+import LimitReached from './LimitReached'
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
   inputPromt: string;
   onSend?: (message: string, files: UploadedFile[]) => void;
   setMessages: React.Dispatch<React.SetStateAction<any[]>>;
-  messages: any[];
+  promptsLength: number;
   setAssistantMessageLoader: (value: boolean) => void;
   sendMessage: (inputMessage: string) => Promise<void>;
+  limitCrossed: boolean
 }
 
-const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Props) => {
+const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage,limitCrossed,promptsLength }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const baseHeight = 28;
 
@@ -48,14 +50,14 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Pro
     }
   };
 
-  // const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-  //   if (e.key === 'Enter' && !e.shiftKey) {
-  //     e.preventDefault();
-  //     handleSend();
-  //   }
-  // };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
-  const handleSend = () => {
+  const handleSubmit = () => {
     if (inputPromt.trim().length > 0) {
       sendMessage(inputPromt);
       setInputPrompt('')
@@ -71,7 +73,7 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Pro
 
   return (
     <form className='rounded-[var(--border-radius-450)] bg-[var(--secondary-hover-bg)] py-3 px-3 border 
-    border-[#343434] flex flex-col max-w-[640px] md:max-w-[760px] w-full' onSubmit={(e) => { e.preventDefault(); handleSend(); }}>
+    border-[#343434] flex flex-col max-w-[640px] md:max-w-[760px] w-full' onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 
       {/* Error message */}
       {error && (
@@ -94,14 +96,6 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Pro
               />
             ))}
           </div>
-          {/* {uploadedFiles.length > 0 && (
-            <button
-              onClick={clearFiles}
-              className="mt-2 text-xs text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              Clear all files
-            </button>
-          )} */}
         </div>
       )}
 
@@ -111,7 +105,7 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Pro
         placeholder={hasFiles ? 'Add a message or send files...' : 'Ask anything'}
         className='bg-transparent px-2 focus:outline-none placeholder:text-[var(--secondary-text)] resize-none'
         onChange={handleChange}
-        // onKeyDown={handleKeyDown}
+        onKeyDown={handleKeyDown}
         value={inputPromt}
         autoFocus
         disabled={isUploading}
@@ -140,6 +134,9 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Pro
             <Image src={ToolsIcon} alt="tools" />
             <span className='text-[14px]'>Tools</span>
           </div>
+          <div className='text-[14px] text-[var(--secondary-text)]'>
+            {limitCrossed ? "5/5 prompts left" : `${promptsLength}/5 prompts left`}
+          </div>
         </div>
 
         <div className='flex items-center gap-2'>
@@ -156,7 +153,7 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage }: Pro
               ? "bg-white hover:bg-gray-100"
               : "bg-[#858585]"
               }`}
-            style={{cursor: canSend ? 'pointer' : 'not-allowed'}}
+            style={{ cursor: canSend ? 'pointer' : 'not-allowed' }}
           >
             <Image
               src={UpArrowIcon}
