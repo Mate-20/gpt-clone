@@ -8,6 +8,7 @@ import NewChatIcon from '@/public/icons/NewChatIcon.svg'
 import VideoIcon from '@/public/icons/VideoIcon.svg'
 import SearchIcon from '@/public/icons/SearchIcon.svg'
 import FolderIcon from '@/public/icons/FolderIcon.svg'
+import LogoutIcon from '@/public/icons/LogoutIcon.svg'
 import Image from 'next/image'
 import SidebarElement from './SidebarElement'
 import { motion } from 'framer-motion'
@@ -15,6 +16,7 @@ import { useSidebar } from '@/context/SidebarContext'
 import { DismissRegular } from '@fluentui/react-icons'
 import { useModal } from '@/context/ModalBackgroundContext'
 import { useChat } from '@/context/ChatContext'
+import { SignOutButton } from '@clerk/nextjs'
 
 const Sidebar = () => {
   const { setMessages, messages } = useChat()
@@ -34,8 +36,8 @@ const Sidebar = () => {
     setIsModalOpen(false);
     setIsSidebarOpen(false);
   }
-  const handleNewChat = (type : string) => {
-    if(type === "New chat") setMessages([]);
+  const handleNewChat = (type: string) => {
+    if (type === "New chat") setMessages([]);
   }
   return (
     <motion.aside
@@ -98,7 +100,7 @@ const Sidebar = () => {
       {/* grouped links */}
       <div className="flex flex-col">
         {links.slice(0, 3).map((link, key) => (
-          <div onClick={()=>handleNewChat(link.name)} key={key}>
+          <div onClick={() => handleNewChat(link.name)} key={key}>
             <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
           </div>
         ))}
@@ -115,14 +117,19 @@ const Sidebar = () => {
           <SidebarElement key={key} name={link.name} icon={link.icon} isClosed={isCollapsed} />
         ))}
       </motion.div>
-      <motion.div 
-      initial={{opacity : 0}}
-      animate={{opacity : messages.length > 0 ? 1 : 0}}
-      transition={{duration : 0.2}}
-      className='flex flex-col gap-[6px]'>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: messages.length > 0 ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+        className='flex flex-col gap-[6px]'>
         <span className='text-[14px] text-[var(--secondary-text)] pl-[9px]'>Chats</span>
         <div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div>
       </motion.div>
+      <SignOutButton>
+        <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`}>
+          <SidebarElement name='Log out' icon={LogoutIcon} isClosed={isCollapsed} />
+        </div>
+      </SignOutButton>
     </motion.aside>
   );
 };

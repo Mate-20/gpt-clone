@@ -119,7 +119,7 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
           {limitCrossed && <div className='mb-4 w-full flex justify-center'>
             <LimitReached />
           </div>}
-          <InputComponent setInputPrompt={setInputPrompt} inputPromt={inputPromt} setMessages={setMessages} promptsLength={promptsLength} setAssistantMessageLoader={setAssistantMessageLoader} sendMessage={sendMessage} limitCrossed={limitCrossed} />
+          <InputComponent setInputPrompt={setInputPrompt} inputPromt={inputPromt} setMessages={setMessages} promptsLength={promptsLength} setAssistantMessageLoader={setAssistantMessageLoader} sendMessage={sendMessage} limitCrossed={limitCrossed}/>
           <span className='text-[12px] text-center w-[90%]'>ChatGPT can make mistakes. Check important info. See Cookie Preferences.</span>
         </div>
       </div>

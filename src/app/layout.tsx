@@ -7,6 +7,12 @@ import { SidebarProvider } from "@/context/SidebarContext";
 import { ModalProvider } from "@/context/ModalBackgroundContext";
 import ModalBlackScreen from "@/components/ModalBlackScreen";
 import { ChatProvider } from "@/context/ChatContext";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+} from '@clerk/nextjs'
+import SigninNavbar from "@/components/Navbar/SigninNavbar";
 
 export const metadata: Metadata = {
   title: "ChatGPT",
@@ -19,25 +25,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <ChatProvider>
-        <SidebarProvider>
-          <ModalProvider>
-            <body
-              className={`flex`}
-            >
-              <div className="h-[100dvh]">
-                <Sidebar />
-              </div>
-              <ModalBlackScreen />
-              <div className="w-full flex flex-col max-h-[100dvh]">
-                <Navbar />
-                {children}
-              </div>
-            </body>
-          </ModalProvider>
-        </SidebarProvider>
-      </ChatProvider>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <ChatProvider>
+          <SidebarProvider>
+            <ModalProvider>
+              <body
+                className={`flex`}
+              >
+                <SignedIn>
+                  <div className="h-[100dvh]">
+                    <Sidebar />
+                  </div>
+                </SignedIn>
+                <ModalBlackScreen />
+                <div className="w-full flex flex-col max-h-[100dvh]">
+                  <SignedIn>
+                    <Navbar />
+                  </SignedIn>
+                  <SignedOut>
+                    <SigninNavbar/>
+                  </SignedOut>
+                  {children}
+                </div>
+              </body>
+            </ModalProvider>
+          </SidebarProvider>
+        </ChatProvider>
+      </html>
+    </ClerkProvider>
   );
 }

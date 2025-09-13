@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.13",
+    "@clerk/nextjs": "^6.32.0",
     "@fluentui/react-icons": "^2.0.297",
     "@uploadcare/upload-client": "^6.17.0",
     "ai": "^5.0.40",

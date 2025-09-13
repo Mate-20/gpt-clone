@@ -9,6 +9,7 @@ import FilePreview from './FilePreview'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { UploadedFile } from '@/types/upload'
 import LimitReached from './LimitReached'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
@@ -21,7 +22,7 @@ interface Props {
   limitCrossed: boolean
 }
 
-const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage,limitCrossed,promptsLength }: Props) => {
+const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage, limitCrossed, promptsLength }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const baseHeight = 28;
 
@@ -100,17 +101,28 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage,limitC
       )}
 
       {/* Input Field */}
-      <textarea
-        ref={textareaRef}
-        placeholder={hasFiles ? 'Add a message or send files...' : 'Ask anything'}
-        className='bg-transparent px-2 focus:outline-none placeholder:text-[var(--secondary-text)] resize-none'
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        value={inputPromt}
-        autoFocus
-        disabled={isUploading}
-        style={{ height: `${baseHeight}px`, maxHeight: "200px", overflowY: "auto" }}
-      />
+      <SignedIn>
+        <textarea
+          ref={textareaRef}
+          placeholder={hasFiles ? 'Add a message or send files...' : 'Ask anything'}
+          className='bg-transparent px-2 focus:outline-none placeholder:text-[var(--secondary-text)] resize-none'
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          value={inputPromt}
+          autoFocus
+          disabled={isUploading}
+          style={{ height: `${baseHeight}px`, maxHeight: "200px", overflowY: "auto" }}
+        />
+      </SignedIn>
+      <SignedOut>
+        <textarea
+          ref={textareaRef}
+          placeholder={'Log in or Sign up to start asking'}
+          className='bg-transparent px-2 focus:outline-none placeholder:text-[var(--secondary-text)] cursor-not-allowed resize-none'
+          disabled
+          style={{ height: `${baseHeight}px`, maxHeight: "200px", overflowY: "auto" }}
+        />
+      </SignedOut>
 
       {/* Loading indicator */}
       {isUploading && (
