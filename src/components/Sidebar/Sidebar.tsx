@@ -22,7 +22,7 @@ import { getChatsService } from '@/service/getChatsService'
 import Link from 'next/link'
 
 const Sidebar = () => {
-  const { setMessages, messages } = useChat()
+  const { setMessages } = useChat()
   const links = [
     { name: "New chat", href: "/dashboard/profile", icon: NewChatIcon },
     { name: "Search chats", href: "/dashboard/events", icon: SearchIcon },
@@ -34,7 +34,8 @@ const Sidebar = () => {
 
   const { toggleSidebar, isCollapsed, isSidebarOpen, setIsSidebarOpen } = useSidebar()
   const { setIsModalOpen } = useModal()
-  const [chats,setChats] = useState<Chat[]>([])
+  const [chats, setChats] = useState<Chat[]>([])
+  const [loadingChats, setLoadingChats] = useState(true)
 
   const handleCloseNavbar = () => {
     setIsModalOpen(false);
@@ -43,17 +44,18 @@ const Sidebar = () => {
   const handleNewChat = (type: string) => {
     if (type === "New chat") setMessages([]);
   }
-  useEffect(()=>{
+  useEffect(() => {
     fetchChats()
-  },[])
+  }, [])
 
   const fetchChats = async () => {
-    try{
+    try {
       const data = await getChatsService();
-      if(data){
+      if (data) {
         setChats(data)
       }
-    }catch(err){
+      setLoadingChats(false)
+    } catch (err) {
       console.log("error")
     }
   }
@@ -141,15 +143,16 @@ const Sidebar = () => {
         // transition={{ duration: 0.2 }}
         className='flex flex-col gap-[6px]'>
         <span className='text-[14px] text-[var(--secondary-text)] pl-[9px]'>Chats</span>
-        {chats.map((chat, key)=>(
-          <Link href={`/${chat._id}`} key={key} className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>
-            {chat.title}
-          </Link>
-        ))}
+        {loadingChats ? <div className='text-[14px] text-[var(--secondary-text)'>Loading...</div> :
+          chats.map((chat, key) => (
+            <Link href={`/${chat._id}`} key={key} className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>
+              {chat.title}
+            </Link>
+          ))}
         {/* {<div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div> */}
       </motion.div>
       <SignOutButton>
-        <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`}>
+        <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`} onClick={() => setMessages([])}>
           <SidebarElement name='Log out' icon={LogoutIcon} isClosed={isCollapsed} />
         </div>
       </SignOutButton>

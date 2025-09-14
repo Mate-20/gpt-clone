@@ -1,19 +1,19 @@
 // services/chatService.ts
 
 export const sendMessageService = async (
+  chatId: string,
+  mem0Id: string,
   inputMessage: string,
   onMessage: (partial: string) => void
 ) => {
-  const userMessage = {
-    role: "user" as const,
-    content: inputMessage,
-  };
+  // const userMessage = {
+  //   role: "user" as const,
+  //   content: inputMessage,
+  // };
 
   const res = await fetch("/api/chat", {
     method: "POST",
-    body: JSON.stringify({
-      messages: [userMessage], // only current prompt
-    }),
+    body: JSON.stringify({ chatId, mem0Id, messages: [{ role: "user", content: inputMessage }] }),
   });
 
   if (!res.ok) {
@@ -34,5 +34,11 @@ export const sendMessageService = async (
     onMessage(botReply); // push updates back to UI
   }
 
-  return botReply; // final reply
+  // Return final AI message in DB format
+  return {
+    role: "assistant",
+    content: botReply,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 };
