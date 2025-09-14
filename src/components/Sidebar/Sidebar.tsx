@@ -77,6 +77,12 @@ const Sidebar = () => {
       console.error('Sign out failed:', error);
     }
   }
+  const handleSelectChat = (chatId: string) => {
+    if(isSidebarOpen){
+      setIsSidebarOpen(false)
+    }
+    setSelectedChat(chatId)
+  }
 
   return (
     <motion.aside
@@ -166,7 +172,7 @@ const Sidebar = () => {
           chats.map((chat, key) => (
             <Link href={`/${chat.chatId}`} key={key} className={`text-[14px] flex items-center gap-[6px] p-2 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer
              ${selectedChat == chat.chatId ? 'bg-[#242424]' : ''}
-            ` } onClick={() => setSelectedChat(chat.chatId)}>
+            ` } onClick={() => handleSelectChat(chat.chatId)}>
               {chat.title}
             </Link>
           ))}
