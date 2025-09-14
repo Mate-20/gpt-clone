@@ -62,7 +62,6 @@ import { NextResponse } from "next/server";
 import mem0 from "@/lib/mem0";
 import clientPromise from "@/lib/mongodb"; // ✅ Mongo connection
 import { currentUser } from '@clerk/nextjs/server';
-import { v4 as uuidv4 } from "uuid";
 // Load Gemini model
 const model = google("models/gemini-2.0-flash");
 

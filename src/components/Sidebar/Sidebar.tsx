@@ -16,14 +16,16 @@ import { useSidebar } from '@/context/SidebarContext'
 import { DismissRegular } from '@fluentui/react-icons'
 import { useModal } from '@/context/ModalBackgroundContext'
 import { useChat } from '@/context/ChatContext'
-import { SignOutButton, useClerk } from '@clerk/nextjs'
+import { useClerk } from '@clerk/nextjs'
+import { useParams } from "next/navigation";
 import { Chat } from '@/types/chat'
 import { getChatsService } from '@/service/getChatsService'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 const Sidebar = () => {
-  const { setMessages, messages } = useChat()
+  const { chatId } = useParams(); // chatId will be the dynamic
+  const { messages, setMessages } = useChat()
   const links = [
     { name: "New chat", href: "/dashboard/profile", icon: NewChatIcon },
     { name: "Search chats", href: "/dashboard/events", icon: SearchIcon },
@@ -37,7 +39,7 @@ const Sidebar = () => {
   const { setIsModalOpen } = useModal()
   const [chats, setChats] = useState<Chat[]>([])
   const [loadingChats, setLoadingChats] = useState(true)
-  const [selectedChat, setSelectedChat] = useState<string>("")
+  const [selectedChat, setSelectedChat] = useState<string>(chatId as string || "")
 
   const handleCloseNavbar = () => {
     setIsModalOpen(false);
@@ -47,10 +49,15 @@ const Sidebar = () => {
   const handleNewChat = (type: string) => {
     if (type === "New chat") {
       router.push("/")
+      setMessages([])
     }
   }
   useEffect(() => {
-    fetchChats()
+    // We need to check if the chatId is already in the chats array
+    if (chats.find((chat) => chat.chatId === chatId)) return;
+    else {
+      fetchChats()
+    }
   }, [messages])
 
   const fetchChats = async () => {
@@ -78,7 +85,7 @@ const Sidebar = () => {
     }
   }
   const handleSelectChat = (chatId: string) => {
-    if(isSidebarOpen){
+    if (isSidebarOpen) {
       setIsSidebarOpen(false)
       setIsModalOpen(false)
     }
@@ -94,7 +101,7 @@ const Sidebar = () => {
           : "var(--secondary-bg)",
       }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
-      className={`h-[94vh] flex-col gap-4 px-2 pt-2 overflow-hidden 
+      className={`h-full flex-col gap-4 px-2 pt-2 overflow-hidden 
       border-r border-[var(--border-color)] z-50 top-0 left-0
       ${isSidebarOpen ? "absolute flex" : "hidden"} 
       md:flex                 
@@ -180,9 +187,9 @@ const Sidebar = () => {
         {/* {<div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div> */}
       </motion.div>
       {/* <SignOutButton> */}
-        <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`} onClick={handleSignOut}>
-          <SidebarElement name='Log out' icon={LogoutIcon} isClosed={isCollapsed} />
-        </div>
+      <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`} onClick={handleSignOut}>
+        <SidebarElement name='Log out' icon={LogoutIcon} isClosed={isCollapsed} />
+      </div>
       {/* </SignOutButton> */}
     </motion.aside>
   );

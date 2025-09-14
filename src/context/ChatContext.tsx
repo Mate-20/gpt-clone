@@ -2,12 +2,6 @@
 // ChatContext.tsx
 import { createContext, useContext, useState, ReactNode } from "react";
 
-type Message = {
-  id: string;
-  role: "user" | "assistant" | "assistant-temp";
-  content: string;
-};
-
 type ChatContextType = {
   messages: any[];
   setMessages: React.Dispatch<React.SetStateAction<any[]>>;
