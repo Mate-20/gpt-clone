@@ -80,6 +80,7 @@ const Sidebar = () => {
   const handleSelectChat = (chatId: string) => {
     if(isSidebarOpen){
       setIsSidebarOpen(false)
+      setIsModalOpen(false)
     }
     setSelectedChat(chatId)
   }
