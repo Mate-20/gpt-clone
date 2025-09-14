@@ -6,7 +6,6 @@ import MicIcon from "@/public/icons/MicIcon.svg"
 import UpArrowIcon from "@/public/icons/UpArrowIcon.svg"
 import FileUploadButton from './FileuploadButton'
 import FilePreview from './FilePreview'
-import { useFileUpload } from '@/hooks/useFileUpload'
 import { UploadedFile } from '@/types/upload'
 import LimitReached from './LimitReached'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
