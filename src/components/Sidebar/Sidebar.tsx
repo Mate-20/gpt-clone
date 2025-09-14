@@ -9,6 +9,7 @@ import VideoIcon from '@/public/icons/VideoIcon.svg'
 import SearchIcon from '@/public/icons/SearchIcon.svg'
 import FolderIcon from '@/public/icons/FolderIcon.svg'
 import LogoutIcon from '@/public/icons/LogoutIcon.svg'
+import MenuIcon from '@/public/icons/MenuIcon.svg'
 import Image from 'next/image'
 import SidebarElement from './SidebarElement'
 import { motion } from 'framer-motion'
@@ -20,8 +21,9 @@ import { useClerk } from '@clerk/nextjs'
 import { useParams } from "next/navigation";
 import { Chat } from '@/types/chat'
 import { getChatsService } from '@/service/getChatsService'
-import Link from 'next/link'
+import { DeleteRegular } from '@fluentui/react-icons'
 import { useRouter } from 'next/navigation'
+import { deleteChatService } from '@/service/deleteChatService'
 
 const Sidebar = () => {
   const { chatId } = useParams(); // chatId will be the dynamic
@@ -89,7 +91,18 @@ const Sidebar = () => {
       setIsSidebarOpen(false)
       setIsModalOpen(false)
     }
+    router.push(`/${chatId}`)
     setSelectedChat(chatId)
+  }
+
+  const handleDeleteChat = async (chatId: string) => {
+    try {
+      setLoadingChats(true)
+      await deleteChatService(chatId)
+      fetchChats()
+    } catch (err) {
+      console.log("error")
+    }
   }
 
   return (
@@ -171,18 +184,24 @@ const Sidebar = () => {
         ))}
       </motion.div>
       <motion.div
-        // initial={{ opacity: 0 }}
-        // animate={{ opacity: messages.length > 0 ? 1 : 0 }}
-        // transition={{ duration: 0.2 }}
+        animate={{ opacity: isCollapsed ? 0 : 1 }} transition={{ duration: 0.2 }}
         className='flex flex-col gap-[6px]'>
         <span className='text-[14px] text-[var(--secondary-text)] pl-[9px]'>Chats</span>
         {loadingChats ? <div className='text-[14px] text-[var(--secondary-text)'>Loading...</div> :
           chats.map((chat, key) => (
-            <Link href={`/${chat.chatId}`} key={key} className={`text-[14px] flex items-center gap-[6px] p-2 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer
+            <div key={key} className={`text-[14px] flex items-center justify-between p-2 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer relative 
              ${selectedChat == chat.chatId ? 'bg-[#242424]' : ''}
             ` } onClick={() => handleSelectChat(chat.chatId)}>
-              {chat.title}
-            </Link>
+              <span>{chat.title}</span>
+              <div
+              className='hover:bg-[var(--primary-hover-bg)] rounded-sm w-[20px] h-[20px] flex-center'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteChat(chat.chatId);
+                }}
+              ><DeleteRegular fontSize={18} color='#bf5656' />
+              </div>
+            </div>
           ))}
         {/* {<div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div> */}
       </motion.div>
