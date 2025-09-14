@@ -168,7 +168,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
       <div className='flex-col-center gap-8 w-full px-3 mb-[60px]'>
         {messages.length === 0 &&
           <div className='flex flex-col items-center gap-1 '>
-            <span className='text-[28px] w-full max-[780px]:mb-[40px]'>How are you today, {userName}</span>
+            <span className='text-[28px] w-full max-[780px]:mb-[40px] text-center'>How are you today, {userName}</span>
           </div>
         }
         <div className={`w-[94%] gap-1 flex-col-center max-[780px]:absolute max-[780px]:bottom-3 max-[780px]:w-[94%] ${messages.length > 0 ? 'absolute bottom-3 ' : ''}`}>
