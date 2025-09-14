@@ -4,7 +4,7 @@ import MessagesScreen from './MessagesScreen';
 import { useChat } from '@/context/ChatContext';
 import { sendMessageService } from '@/service/chatService';
 import LimitReached from './LimitReached';
-import mem0 from "@/lib/mem0";
+import { useUser } from '@clerk/nextjs'
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
@@ -13,10 +13,12 @@ interface Props {
 
 const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
 
+  const { user, isLoaded } = useUser()
   const { messages, setMessages } = useChat();
   const [limitCrossed, setLimitCrossed] = useState(false);
   const [promptsLength, setPromptsLength] = useState(0);
   const [assistantMessageLoader, setAssistantMessageLoader] = useState(false);
+  
 
   useEffect(() => {
     if (window.localStorage.getItem("limitCrossed") == "true") {
@@ -101,7 +103,7 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
 
   };
 
-
+ const userName = user?.firstName || user?.fullName || user?.username || 'there'
   return (
     <div className={`w-full h-full ${messages.length > 0 ? 'flex flex-col items-center justify-start' : 'flex-col-center'} relative px-3`}>
       {messages.length > 0 &&
@@ -110,10 +112,9 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
         </div>}
       <div className='flex-col-center gap-8 w-full px-3 mb-[60px]'>
         {messages.length === 0 &&
-          <div className='flex flex-col items-center gap-1 w-full max-[780px]:mb-[40px]'>
-            <span className='text-[28px]'>Temporary Chat</span>
-            <span className='text-center text-[16px] text-[var(--secondary-text)] w-[220px] max-[780px]:hidden'>This chat won't appear in history, use or update ChatGPT's memory, or be used to train our models. For safety purposes, we may keep a copy of this chat for up to 30 days.</span>
-          </div>
+          <div className='flex flex-col items-center gap-1 '>
+            <span className='text-[28px] w-full max-[780px]:mb-[40px]'>How are you today, {userName}</span>
+           </div>
         }
         <div className={`w-[94%] gap-1 flex-col-center max-[780px]:absolute max-[780px]:bottom-3 max-[780px]:w-[94%] ${messages.length > 0 ? 'absolute bottom-3 ' : ''}`}>
           {limitCrossed && <div className='mb-4 w-full flex justify-center'>
@@ -128,3 +129,4 @@ const ChatBox = ({ setInputPrompt, inputPromt }: Props) => {
 }
 
 export default ChatBox
+            {/* <span className='text-center text-[16px] text-[var(--secondary-text)] w-[220px] max-[780px]:hidden'>This chat won't appear in history, use or update ChatGPT's memory, or be used to train our models. For safety purposes, we may keep a copy of this chat for up to 30 days.</span> */}

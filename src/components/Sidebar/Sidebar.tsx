@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '@/public/gpt_logo.png'
 import SideIcon from '@/public/icons/sidebarIcon.svg'
 import LibraryIcon from '@/public/icons/LibraryIcon.svg'
@@ -17,6 +17,9 @@ import { DismissRegular } from '@fluentui/react-icons'
 import { useModal } from '@/context/ModalBackgroundContext'
 import { useChat } from '@/context/ChatContext'
 import { SignOutButton } from '@clerk/nextjs'
+import { Chat } from '@/types/chat'
+import { getChatsService } from '@/service/getChatsService'
+import Link from 'next/link'
 
 const Sidebar = () => {
   const { setMessages, messages } = useChat()
@@ -31,6 +34,7 @@ const Sidebar = () => {
 
   const { toggleSidebar, isCollapsed, isSidebarOpen, setIsSidebarOpen } = useSidebar()
   const { setIsModalOpen } = useModal()
+  const [chats,setChats] = useState<Chat[]>([])
 
   const handleCloseNavbar = () => {
     setIsModalOpen(false);
@@ -38,6 +42,20 @@ const Sidebar = () => {
   }
   const handleNewChat = (type: string) => {
     if (type === "New chat") setMessages([]);
+  }
+  useEffect(()=>{
+    fetchChats()
+  },[])
+
+  const fetchChats = async () => {
+    try{
+      const data = await getChatsService();
+      if(data){
+        setChats(data)
+      }
+    }catch(err){
+      console.log("error")
+    }
   }
   return (
     <motion.aside
@@ -118,12 +136,17 @@ const Sidebar = () => {
         ))}
       </motion.div>
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: messages.length > 0 ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
+        // initial={{ opacity: 0 }}
+        // animate={{ opacity: messages.length > 0 ? 1 : 0 }}
+        // transition={{ duration: 0.2 }}
         className='flex flex-col gap-[6px]'>
         <span className='text-[14px] text-[var(--secondary-text)] pl-[9px]'>Chats</span>
-        <div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div>
+        {chats.map((chat, key)=>(
+          <Link href={`/${chat._id}`} key={key} className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>
+            {chat.title}
+          </Link>
+        ))}
+        {/* {<div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div> */}
       </motion.div>
       <SignOutButton>
         <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`}>

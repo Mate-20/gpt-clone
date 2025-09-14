@@ -48,3 +48,8 @@ bun dev
 - **mem0** → Stores/retrieves user memories (per `user_id`)
 - **Local Storage** → Limits prompt history (max 4)
 - **Cookies** → Generates unique `user_id` for each visitor
+
+
+mongo
+username : alvin2000
+password:mongobuddyboy

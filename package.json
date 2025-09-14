@@ -18,6 +18,8 @@
     "highlight.js": "^11.11.1",
     "lucide-react": "^0.543.0",
     "mem0ai": "^2.1.38",
+    "mongodb": "^6.19.0",
+    "mongoose": "^8.18.1",
     "next": "15.2.4",
     "react": "^18",
     "react-dom": "^18",
