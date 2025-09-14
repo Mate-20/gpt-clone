@@ -1,11 +1,14 @@
 export interface UploadedFile {
-  id: string;
-  file: File;
-  preview?: string;
-  type: 'image' | 'document' | 'other';
+  // id: string;
+  // file: File;
+  // preview?: string;
+  // type: 'image' | 'document' | 'other';
+  // name: string;
+  // size: number;
+  // uploadedAt: Date;
+    url: string;
   name: string;
-  size: number;
-  uploadedAt: Date;
+  type: string;
 }
 
 export interface FileUploadProps {

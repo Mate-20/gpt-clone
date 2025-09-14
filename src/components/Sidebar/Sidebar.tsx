@@ -99,7 +99,12 @@ const Sidebar = () => {
     try {
       setLoadingChats(true)
       await deleteChatService(chatId)
-      fetchChats()
+      if (chatId === selectedChat) {
+        router.push("/")
+      } else {
+        fetchChats();
+      }
+
     } catch (err) {
       console.log("error")
     }
@@ -194,7 +199,7 @@ const Sidebar = () => {
             ` } onClick={() => handleSelectChat(chat.chatId)}>
               <span>{chat.title}</span>
               <div
-              className='hover:bg-[var(--primary-hover-bg)] rounded-sm w-[20px] h-[20px] flex-center'
+                className='hover:bg-[var(--primary-hover-bg)] rounded-sm w-[20px] h-[20px] flex-center'
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDeleteChat(chat.chatId);

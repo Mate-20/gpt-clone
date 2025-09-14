@@ -4,6 +4,7 @@ export const sendMessageService = async (
   chatId: string,
   mem0Id: string,
   inputMessage: string,
+  imageUrl : string,
   onMessage: (partial: string) => void
 ) => {
   // const userMessage = {
@@ -13,7 +14,7 @@ export const sendMessageService = async (
 
   const res = await fetch("/api/chat", {
     method: "POST",
-    body: JSON.stringify({ chatId, mem0Id, messages: [{ role: "user", content: inputMessage }] }),
+    body: JSON.stringify({ chatId, mem0Id, messages: [{ role: "user", content: inputMessage, imageUrl }] }),
   });
 
   if (!res.ok) {

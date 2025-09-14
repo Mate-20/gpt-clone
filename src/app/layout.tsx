@@ -13,6 +13,7 @@ import {
   SignedOut,
 } from '@clerk/nextjs'
 import SigninNavbar from "@/components/Navbar/SigninNavbar";
+import { UploadProvider } from "@/context/UploadImageContext";
 
 export const metadata: Metadata = {
   title: "ChatGPT",
@@ -30,25 +31,27 @@ export default function RootLayout({
         <ChatProvider>
           <SidebarProvider>
             <ModalProvider>
-              <body
-                className={`flex`}
-              >
-                <SignedIn>
-                  <div className="h-[100dvh]">
-                    <Sidebar />
-                  </div>
-                </SignedIn>
-                <ModalBlackScreen />
-                <div className="w-full flex flex-col max-h-[100dvh]">
+              <UploadProvider>
+                <body
+                  className={`flex`}
+                >
                   <SignedIn>
-                    <Navbar />
+                    <div className="h-[100dvh]">
+                      <Sidebar />
+                    </div>
                   </SignedIn>
-                  <SignedOut>
-                    <SigninNavbar/>
-                  </SignedOut>
-                  {children}
-                </div>
-              </body>
+                  <ModalBlackScreen />
+                  <div className="w-full flex flex-col max-h-[100dvh]">
+                    <SignedIn>
+                      <Navbar />
+                    </SignedIn>
+                    <SignedOut>
+                      <SigninNavbar />
+                    </SignedOut>
+                    {children}
+                  </div>
+                </body>
+              </UploadProvider>
             </ModalProvider>
           </SidebarProvider>
         </ChatProvider>

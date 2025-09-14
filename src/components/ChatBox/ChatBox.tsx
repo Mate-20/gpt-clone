@@ -6,6 +6,7 @@ import { useChat } from '@/context/ChatContext';
 import { sendMessageService } from '@/service/chatService';
 import LimitReached from './LimitReached';
 import { useUser } from '@clerk/nextjs'
+import { useUpload } from '@/context/UploadImageContext';
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
@@ -74,18 +75,30 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
   //     setAssistantMessageLoader(false);
   //   }
   // };
-  const sendMessage = async (inputMessage: string, editedHistory?: any[]) => {
+  const sendMessage = async (inputMessage: string, fileUrl : string, editedHistory?: any[]) => {
     if (limitCrossed) return;
 
     setAssistantMessageLoader(true);
     // Only append the message locally (no _id)
-    const userMessage = {
-      role: "user" as const,
-      content: inputMessage,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      userId: user?.id, // optional for frontend tracking
-    };
+    let userMessage;
+    if (fileUrl) {
+      userMessage = {
+        role: "user" as const,
+        content: inputMessage,
+        imageUrl: fileUrl,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: user?.id, // optional for frontend tracking
+      };
+    } else {
+      userMessage = {
+        role: "user" as const,
+        content: inputMessage,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: user?.id, // optional for frontend tracking
+      };
+    }
 
     if (editedHistory) {
       // Case: Editing — reset messages to history 
@@ -102,6 +115,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
         chatId || "",
         mem0Id || "",
         inputMessage,
+        fileUrl ? fileUrl : "",
         (partial) => {
           setMessages((prev) => [
             ...prev.filter((m) => m._tempId !== tempId),
@@ -109,7 +123,6 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
           ]);
         }
       );
-
       // Replace temp loader with final AI response
       setMessages((prev) => [
         ...prev.filter((m) => m._tempId !== tempId),
@@ -154,7 +167,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
     // Only keep messages before + edited one
     const updated = [...before, edited];
     // Restart from here: re-run AI for this edited message
-    sendMessage(editedInput, updated);
+    sendMessage(editedInput, "", updated);
 
   };
 

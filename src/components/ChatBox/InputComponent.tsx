@@ -1,5 +1,5 @@
 // components/InputComponent.tsx
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import ToolsIcon from "@/public/icons/ToolsIcon.svg"
 import MicIcon from "@/public/icons/MicIcon.svg"
@@ -10,6 +10,7 @@ import { useFileUpload } from '@/hooks/useFileUpload'
 import { UploadedFile } from '@/types/upload'
 import LimitReached from './LimitReached'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { useUpload } from '@/context/UploadImageContext'
 
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
@@ -18,28 +19,29 @@ interface Props {
   setMessages: React.Dispatch<React.SetStateAction<any[]>>;
   promptsLength: number;
   setAssistantMessageLoader: (value: boolean) => void;
-  sendMessage: (inputMessage: string) => Promise<void>;
+  sendMessage: (inputMessage: string, fileUrl : string) => Promise<void>;
   limitCrossed: boolean
 }
 
 const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage, limitCrossed, promptsLength }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const baseHeight = 28;
+  // const {
+  //   uploadedFiles,
+  //   isUploading,
+  //   error,
+  //   addFiles,
+  //   removeFile,
+  //   clearFiles,
+  //   formatFileSize,
+  //   hasFiles
+  // } = useFileUpload({
+  //   maxFiles: 5,
+  //   maxFileSize: 25, // 25MB
+  //   acceptedTypes: ['image/*', '.pdf', '.doc', '.docx', '.txt', '.csv', '.xlsx'],
+  // });
 
-  const {
-    uploadedFiles,
-    isUploading,
-    error,
-    addFiles,
-    removeFile,
-    clearFiles,
-    formatFileSize,
-    hasFiles
-  } = useFileUpload({
-    maxFiles: 5,
-    maxFileSize: 25, // 25MB
-    acceptedTypes: ['image/*', '.pdf', '.doc', '.docx', '.txt', '.csv', '.xlsx'],
-  });
+    const { files, isUploading, removeFile, clearFiles } = useUpload();
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputPrompt(e.target.value);
@@ -60,40 +62,40 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage, limit
 
   const handleSubmit = () => {
     if (inputPromt.trim().length > 0) {
-      sendMessage(inputPromt);
+      sendMessage(inputPromt, files[0]?.url || '');
       setInputPrompt('')
+      clearFiles()
     }
   };
 
   const handleFilesSelected = async (files: FileList) => {
-    await addFiles(files);
+    // await addFiles(files);
   };
 
   // Check if send button should be enabled
-  const canSend = (inputPromt.trim().length > 0 || hasFiles) && !isUploading;
+  const canSend = (inputPromt.trim().length > 0 || files.length > 0) && !isUploading;
 
   return (
     <form className='rounded-[var(--border-radius-450)] bg-[var(--secondary-hover-bg)] py-3 px-3 border 
     border-[#343434] flex flex-col max-w-[640px] md:max-w-[760px] w-full' onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 
       {/* Error message */}
-      {error && (
+      {/* {error && (
         <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-md">
           <p className="text-red-600 text-sm">{error}</p>
         </div>
-      )}
+      )} */}
 
       {/* File previews */}
-      {hasFiles && (
+      {files.length > 0 && (
         <div className="pb-3">
           <div className="flex flex-wrap gap-3">
-            {uploadedFiles.map((file) => (
+            {files.map((file,key) => (
               <FilePreview
-                key={file.id}
+                key={key}
                 file={file}
                 onRemove={removeFile}
-                formatFileSize={formatFileSize}
-                totalFiles={uploadedFiles.length}
+                totalFiles={files.length}
               />
             ))}
           </div>
@@ -104,7 +106,7 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage, limit
       <SignedIn>
         <textarea
           ref={textareaRef}
-          placeholder={hasFiles ? 'Add a message or send files...' : 'Ask anything'}
+          placeholder={files.length > 0 ? 'Add a message or send files...' : 'Ask anything'}
           className='bg-transparent px-2 focus:outline-none placeholder:text-[var(--secondary-text)] resize-none'
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -138,7 +140,7 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage, limit
           {/* File Upload Button */}
           <FileUploadButton
             onFilesSelected={handleFilesSelected}
-            disabled={isUploading}
+            disabled={isUploading || files.length > 0}
           />
 
           {/* Tools Button */}

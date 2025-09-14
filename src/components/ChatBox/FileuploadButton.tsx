@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import Image from 'next/image';
 import AddIcon from "@/public/icons/AddIcon.svg";
+import { useUpload } from '@/context/UploadImageContext';
 
 interface FileUploadButtonProps {
   onFilesSelected: (files: FileList) => void;
@@ -11,44 +12,44 @@ interface FileUploadButtonProps {
 
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({
   onFilesSelected,
-  acceptedTypes = ['image/*', '.pdf', '.doc', '.docx', '.txt'],
+  acceptedTypes = ['.png', '.jpg', 'jpeg', '.pdf', '.doc', '.docx', '.txt'],
   multiple = true,
   disabled = false
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadFiles, files } = useUpload();
 
-  const handleClick = () => {
-    if (!disabled && fileInputRef.current) {
-      fileInputRef.current.click();
+  const handleClick = () => fileInputRef.current?.click();
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // ❌ Size check
+    if (file.size > 2 * 1024 * 1024) {
+      alert("File must be smaller than 2 MB.");
+      e.target.value = "";
+      return;
+    }
+    if (e.target.files) {
+      await uploadFiles(e.target.files);
     }
   };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      onFilesSelected(files);
-    }
-    // Reset input so same file can be selected again
-    e.target.value = '';
-  };
-
   return (
     <>
       <input
         ref={fileInputRef}
         type="file"
-        multiple={multiple}
         accept={acceptedTypes.join(',')}
-        onChange={handleFileChange}
+        onChange={handleChange}
         className="hidden"
         disabled={disabled}
       />
-      <div 
-        className={`p-2 rounded-full cursor-pointer transition-colors duration-200 ${
-          disabled 
-            ? 'opacity-50 cursor-not-allowed' 
-            : 'hover:bg-[var(--primary-hover-bg)]'
-        }`}
+      <div
+        className={`p-2 rounded-full cursor-pointer transition-colors duration-200 ${disabled
+          ? 'opacity-50 cursor-not-allowed'
+          : 'hover:bg-[var(--primary-hover-bg)]'
+          }`}
         onClick={handleClick}
         title="Upload files"
       >

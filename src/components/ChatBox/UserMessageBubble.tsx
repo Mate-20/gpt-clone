@@ -36,9 +36,9 @@ const UserMessageBubble = ({ message, onEdit, onCopy }: UserMessageBubbleProps) 
   };
 
   const handleHover = () => {
-    if(message.content.includes("1z66y5vt2h.ucarecd.net")){
+    if (message.content.includes("1z66y5vt2h.ucarecd.net")) {
       return;
-    }else{
+    } else {
       setIsHovered(true);
     }
   }
@@ -64,11 +64,11 @@ const UserMessageBubble = ({ message, onEdit, onCopy }: UserMessageBubbleProps) 
               </div>
             </div>
           ) : (
-            message.content.includes("ucarecd.net")?(
-              <Image src={message.content} alt="image" width={200} height={200} className='rounded-2xl'/>
-            ):
-            <div className="bg-[var(--secondary-hover-bg)] text-white rounded-2xl px-4 py-3 whitespace-pre-wrap w-full">
-              {message.content}
+            <div className={`flex flex-col ${message.imageUrl ? "gap-2 items-end" : ""} w-full`}>
+              {message.imageUrl && <Image src={message.imageUrl} alt="image" className='rounded-md' width={250} height={250}/>}
+              <div className="bg-[var(--secondary-hover-bg)] text-white rounded-2xl px-4 py-3 whitespace-pre-wrap w-fit">
+                {message.content}
+              </div>
             </div>
           )}
         </div>
