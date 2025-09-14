@@ -105,11 +105,12 @@ export async function POST(req: Request) {
       foundUser = { ...newUser, _id: insertRes.insertedId };
     }
     // 2. Find the user's most recent chat (by user._id). If none, create one.
+    let allChats = await chatsCol.find({ userId: clerkUserId }).toArray();
     let chat = await chatsCol.findOne({ userId: clerkUserId, chatId : chatId }, { sort: { createdAt: -1 } });
     if (!chat) {
       const newChat = {
         userId: clerkUserId,
-        title: "New Chat",
+        title: `Chat ${allChats.length + 1}`,
         createdAt: new Date(),
         updatedAt: new Date(),
         chatId : chatId
