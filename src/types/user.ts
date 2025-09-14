@@ -7,4 +7,5 @@ export interface User {
   mem0UserId: string;    // Mem0 id
   createdAt: Date;
   updatedAt: Date;
+  email: string;
 }

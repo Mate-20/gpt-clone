@@ -16,13 +16,14 @@ import { useSidebar } from '@/context/SidebarContext'
 import { DismissRegular } from '@fluentui/react-icons'
 import { useModal } from '@/context/ModalBackgroundContext'
 import { useChat } from '@/context/ChatContext'
-import { SignOutButton } from '@clerk/nextjs'
+import { SignOutButton, useClerk } from '@clerk/nextjs'
 import { Chat } from '@/types/chat'
 import { getChatsService } from '@/service/getChatsService'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const Sidebar = () => {
-  const { setMessages } = useChat()
+  const { setMessages, messages } = useChat()
   const links = [
     { name: "New chat", href: "/dashboard/profile", icon: NewChatIcon },
     { name: "Search chats", href: "/dashboard/events", icon: SearchIcon },
@@ -36,19 +37,24 @@ const Sidebar = () => {
   const { setIsModalOpen } = useModal()
   const [chats, setChats] = useState<Chat[]>([])
   const [loadingChats, setLoadingChats] = useState(true)
+  const [selectedChat, setSelectedChat] = useState<string>("")
 
   const handleCloseNavbar = () => {
     setIsModalOpen(false);
     setIsSidebarOpen(false);
   }
+  const router = useRouter();
   const handleNewChat = (type: string) => {
-    if (type === "New chat") setMessages([]);
+    if (type === "New chat") {
+      router.push("/")
+    }
   }
   useEffect(() => {
     fetchChats()
-  }, [])
+  }, [messages])
 
   const fetchChats = async () => {
+    setLoadingChats(true)
     try {
       const data = await getChatsService();
       if (data) {
@@ -59,6 +65,19 @@ const Sidebar = () => {
       console.log("error")
     }
   }
+  const { signOut } = useClerk();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut({ redirectUrl: '/' });
+      // The redirectUrl will handle the navigation
+      // Add reload if you need to clear any cached state
+      setTimeout(() => window.location.reload(), 100);
+    } catch (error) {
+      console.error('Sign out failed:', error);
+    }
+  }
+  
   return (
     <motion.aside
       animate={{
@@ -145,17 +164,19 @@ const Sidebar = () => {
         <span className='text-[14px] text-[var(--secondary-text)] pl-[9px]'>Chats</span>
         {loadingChats ? <div className='text-[14px] text-[var(--secondary-text)'>Loading...</div> :
           chats.map((chat, key) => (
-            <Link href={`/${chat._id}`} key={key} className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>
+            <Link href={`/${chat.chatId}`} key={key} className={`text-[14px] flex items-center gap-[6px] p-2 hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer
+             ${selectedChat == chat.chatId ? 'bg-[#242424]' : ''}
+            ` } onClick={() => setSelectedChat(chat.chatId)}>
               {chat.title}
             </Link>
           ))}
         {/* {<div className='text-[14px] flex items-center gap-[6px] p-2 bg-[#242424] hover:bg-[var(--secondary-hover-bg)] rounded-[var(--border-radius-300)] cursor-pointer'>New chat</div> */}
       </motion.div>
-      <SignOutButton>
-        <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`} onClick={() => setMessages([])}>
+      {/* <SignOutButton> */}
+        <div className={`absolute bottom-6 ${isCollapsed ? 'w-[35px]' : 'w-[230px]'}`} onClick={handleSignOut}>
           <SidebarElement name='Log out' icon={LogoutIcon} isClosed={isCollapsed} />
         </div>
-      </SignOutButton>
+      {/* </SignOutButton> */}
     </motion.aside>
   );
 };

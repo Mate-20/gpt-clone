@@ -18,7 +18,7 @@ export async function GET() {
       .findOne({ clerkUserId: clerkUser.id }, { projection: { mem0UserId: 1, _id: 0 } });
 
     if (!foundUser || !foundUser.mem0UserId) {
-      return NextResponse.json({ error: 'mem0UserId not found' }, { status: 404 });
+      return NextResponse.json({ error: 'mem0UserId not found' }, { status: 200 });
     }
 
     return NextResponse.json({

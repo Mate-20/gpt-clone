@@ -5,11 +5,12 @@ import { getMessages } from "@/service/getMessagesService";
 import {getMemoIdService} from "@/service/getMemoIdService"
 import { useChat } from "@/context/ChatContext";
 import { useParams } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 
 export default function Page() {
-  const { chatId } = useParams(); // chatId will be the dyna
-  const { messages, setMessages } = useChat();
+  const { chatId } = useParams(); // chatId will be the dynamic
+  const { setMessages } = useChat();
   const [mem0Id, setMem0Id] = useState("");
 
   const [inputPromt, setInputPrompt] = useState("");
@@ -23,6 +24,9 @@ export default function Page() {
       const data = await getMemoIdService();
       if(data.mem0UserId){
         setMem0Id(data.mem0UserId)
+      }else{
+        const tempMemoId = uuidv4();
+        setMem0Id(tempMemoId)
       }
     } catch (err) {
       console.log("error")

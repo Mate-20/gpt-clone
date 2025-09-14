@@ -1,3 +1,4 @@
+'use client'
 import React, { memo, useEffect, useState } from 'react'
 import InputComponent from './InputComponent'
 import MessagesScreen from './MessagesScreen';
@@ -157,7 +158,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
 
   };
 
-  const userName = user?.firstName || user?.fullName || user?.username || 'there'
+  const userName = user?.firstName || user?.fullName || user?.username || 'buddy'
   return (
     <div className={`w-full h-full ${messages.length > 0 ? 'flex flex-col items-center justify-start' : 'flex-col-center'} relative px-3`}>
       {messages.length > 0 &&

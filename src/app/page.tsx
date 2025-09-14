@@ -1,13 +1,15 @@
 'use client';
-import ChatBox from "@/components/ChatBox/ChatBox";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
+  const router = useRouter();
 
-  const [inputPromt, setInputPrompt] = useState("");
-  return (
-    <div className="h-[94vh] w-full flex flex-col">
-        <ChatBox setInputPrompt={setInputPrompt} inputPromt={inputPromt} />
-    </div>
-  );
+  useEffect(() => {
+    const randomChatId = `chat${uuidv4()}`;
+    router.replace(`/${randomChatId}`);
+  }, [router]);
+
+  return null; // No JSX rendered
 }

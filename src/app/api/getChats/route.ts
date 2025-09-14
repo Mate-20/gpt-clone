@@ -27,7 +27,8 @@ export async function GET() {
         userId: 1,
         title: 1,
         createdAt: 1,
-        updatedAt: 1
+        updatedAt: 1,
+        chatId : 1
       })
       .limit(5) // Limit to last 50 conversations
       .toArray();
@@ -39,7 +40,8 @@ export async function GET() {
         userId: chat.userId || 'New Chat',
         title: chat.title || 0,
         createdAt: chat.createdAt,
-        updatedAt: chat.updatedAt
+        updatedAt: chat.updatedAt,
+        chatId : chat.chatId
       }))
     });
 

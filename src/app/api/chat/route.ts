@@ -62,8 +62,10 @@ import { NextResponse } from "next/server";
 import mem0 from "@/lib/mem0";
 import clientPromise from "@/lib/mongodb"; // ✅ Mongo connection
 import { currentUser } from '@clerk/nextjs/server';
+import { v4 as uuidv4 } from "uuid";
 // Load Gemini model
 const model = google("models/gemini-2.0-flash");
+
 
 export async function POST(req: Request) {
   try {
@@ -79,11 +81,42 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const clerkUserId = clerkUser.id;
+    const clerkemail = clerkUser.emailAddresses[0].emailAddress;
 
     // ✅ Connect Mongo
     const client = await clientPromise;
     const db = client.db("gpt-clone");
     const messagesCol = db.collection("messages");
+    const usersCol = db.collection("users");
+    const chatsCol = db.collection("chats");
+
+    // 1. if user is not stored in DB, store it
+    let foundUser = await usersCol.findOne({ clerkUserId: clerkUserId });
+    // const randommem0UserId = uuidv4();
+    if (!foundUser) {
+      const newUser = {
+        clerkUserId: clerkUserId,
+        mem0UserId: mem0Id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        email: clerkemail
+      }
+      const insertRes = await usersCol.insertOne(newUser);
+      foundUser = { ...newUser, _id: insertRes.insertedId };
+    }
+    // 2. Find the user's most recent chat (by user._id). If none, create one.
+    let chat = await chatsCol.findOne({ userId: clerkUserId, chatId : chatId }, { sort: { createdAt: -1 } });
+    if (!chat) {
+      const newChat = {
+        userId: clerkUserId,
+        title: "New Chat",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        chatId : chatId
+      };
+      const chatRes = await chatsCol.insertOne(newChat);
+      chat = { ...newChat, _id: chatRes.insertedId };
+    }
 
     // 3. Save the user’s message
     const userMessage = {
