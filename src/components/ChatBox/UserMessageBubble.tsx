@@ -65,9 +65,9 @@ const UserMessageBubble = ({ message, onEdit, onCopy }: UserMessageBubbleProps) 
               </div>
             </div>
           ) : (
-            <div className={`flex flex-col ${message.imageUrl || message.fileContent.type.includes("pdf") ? "gap-2 items-end" : ""} w-full`}>
+            <div className={`flex flex-col ${message.imageUrl || message?.fileContent?.type.includes("pdf") ? "gap-2 items-end" : ""} w-full`}>
               {message.imageUrl && <Image src={message.imageUrl} alt="image" className='rounded-md' width={250} height={250} />}
-              {message.fileContent.type.includes("pdf") &&
+              {message?.fileContent?.type?.includes("pdf") &&
                 <div
                   className="relative group flex items-center rounded-[var(--border-radius-300)] border border-[#3f3f3f] p-2 gap-2 w-[280px]"
                 >

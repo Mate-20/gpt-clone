@@ -12,7 +12,7 @@ interface FileUploadButtonProps {
 
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({
   onFilesSelected,
-  acceptedTypes = ['.png', '.jpg', 'jpeg', '.pdf', '.doc', '.docx', '.txt'],
+  acceptedTypes = ['.png', '.jpg', 'jpeg', '.pdf'],
   multiple = true,
   disabled = false
 }) => {

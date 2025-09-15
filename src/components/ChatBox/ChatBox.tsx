@@ -93,7 +93,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
       name : "",
       content : ""
     }
-    if(files[0].type.includes("pdf")){
+    if(files[0]?.type?.includes("pdf")){
       fileContent = {
         type : files[0].type,
         name : files[0].name,
@@ -101,7 +101,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
       }
       userMessage = {
         role: "user" as const,
-        content: inputMessage,
+        content: inputMessage ? inputMessage : "What is this document about?",
         fileContent,
         createdAt: new Date(),
         updatedAt: new Date(),

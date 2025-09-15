@@ -33,6 +33,7 @@ export async function GET(request: Request) {
         updatedAt: 1,
         userId: 1,
         imageUrl : 1,
+        fileContent : 1
       })
       .toArray();
 
@@ -46,7 +47,8 @@ export async function GET(request: Request) {
         createdAt: message.createdAt,
         updatedAt:message.updatedAt,
         userId : message.userId,
-        imageUrl : message.imageUrl
+        imageUrl : message.imageUrl,
+        fileContent : message.fileContent
       }))
     });
 
