@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
     // 3. Save the user’s message
     let userMessage;
-    if (messages[0].fileContent.type.includes("pdf")) {
+    if (messages[0].fileContent?.type?.includes("pdf")) {
       userMessage = {
         chatId: chatId,
         role: "user",
