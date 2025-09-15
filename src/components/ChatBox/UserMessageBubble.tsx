@@ -3,6 +3,7 @@ import ActionButton from './ActionButton';
 import {
   Copy,
   Edit3,
+  FileText
 } from 'lucide-react';
 import Image from 'next/image';
 import { s } from 'framer-motion/client';
@@ -64,8 +65,27 @@ const UserMessageBubble = ({ message, onEdit, onCopy }: UserMessageBubbleProps) 
               </div>
             </div>
           ) : (
-            <div className={`flex flex-col ${message.imageUrl ? "gap-2 items-end" : ""} w-full`}>
-              {message.imageUrl && <Image src={message.imageUrl} alt="image" className='rounded-md' width={250} height={250}/>}
+            <div className={`flex flex-col ${message.imageUrl || message.fileContent.type.includes("pdf") ? "gap-2 items-end" : ""} w-full`}>
+              {message.imageUrl && <Image src={message.imageUrl} alt="image" className='rounded-md' width={250} height={250} />}
+              {message.fileContent.type.includes("pdf") &&
+                <div
+                  className="relative group flex items-center rounded-[var(--border-radius-300)] border border-[#3f3f3f] p-2 gap-2 w-[280px]"
+                >
+                  {/* File icon based on type */}
+                  <div className='bg-[#FA423E] rounded-[var(--border-radius-200)] w-10 h-10 flex-center'>
+                    <FileText size={16} className="text-white" />
+                  </div>
+                  <div className='text-[14px]'>
+                    {/* File Name */}
+                    <div className="truncate font-semibold">{message.fileContent.name}</div>
+                    {/* File extension */}
+                    <span className="">
+                      {/* {file.name.split('.').pop()?.substring(0, 3).toUpperCase()} */}
+                      PDF
+                    </span>
+                  </div>
+                </div>
+              }
               <div className="bg-[var(--secondary-hover-bg)] text-white rounded-2xl px-4 py-3 whitespace-pre-wrap w-fit">
                 {message.content}
               </div>

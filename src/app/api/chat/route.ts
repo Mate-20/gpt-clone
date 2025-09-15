@@ -61,7 +61,18 @@ export async function POST(req: Request) {
 
     // 3. Save the user’s message
     let userMessage;
-    if (messages[0].imageUrl) {
+    if (messages[0].fileContent.type.includes("pdf")) {
+      userMessage = {
+        chatId: chatId,
+        role: "user",
+        content: messages[0].content,
+        fileContent: messages[0].fileContent,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: clerkUserId,
+      }
+    }
+    else if (messages[0].imageUrl) {
       userMessage = {
         chatId: chatId,
         role: "user",
@@ -86,6 +97,20 @@ export async function POST(req: Request) {
 
     // Convert to Gemini-compatible format
     const formattedMessages = messages.map((msg: any) => {
+      // If any document pdf is there
+      if (msg.fileContent) {
+        return {
+          role: msg.role,
+          content: [
+            { type: "text", text: msg.content },
+            {
+              type: "text",
+              text: `Attached document (${msg.fileContent.name}):\n\n${msg.fileContent.content}`,
+            },
+          ],
+        };
+      }
+      // If any image is there
       if (msg.imageUrl) {
         return {
           role: msg.role,

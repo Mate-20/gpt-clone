@@ -74,6 +74,9 @@ const InputComponent = ({ setInputPrompt, inputPromt, onSend, sendMessage, limit
   // Check if send button should be enabled
   const canSend = (inputPromt.trim().length > 0 || files.length > 0) && !isUploading;
 
+  useEffect(()=>{
+    console.log("files",files)
+  },[files])
   return (
     <form className='rounded-[var(--border-radius-450)] bg-[var(--secondary-hover-bg)] py-3 px-3 border 
     border-[#343434] flex flex-col max-w-[640px] md:max-w-[760px] w-full' onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>

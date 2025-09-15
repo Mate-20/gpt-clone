@@ -64,17 +64,17 @@ const MessagesScreen = ({ chatMessages, assistantMessageLoader,handleEdit }: Pro
 
       {/* Messages */}
       <div className="w-full pb-[80px]">
-        {chatMessages.map((message) => (
+        {chatMessages.map((message, key) => (
           message.role === 'user' ? (
             <UserMessageBubble
-              key={message.id}
+              key={key}
               message={message}
               onEdit={handleEdit}
               onCopy={handleCopy}
             />
           ) : (
             <AssistantMessage
-              key={message.id}
+              key={key}
               message={message}
               onCopy={handleCopy}
               onLike={handleLike}

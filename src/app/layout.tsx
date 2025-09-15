@@ -32,25 +32,25 @@ export default function RootLayout({
           <SidebarProvider>
             <ModalProvider>
               <UploadProvider>
-                <body
-                  className={`flex`}
-                >
-                  <SignedIn>
-                    <div className="h-[100dvh]">
-                      <Sidebar />
-                    </div>
-                  </SignedIn>
-                  <ModalBlackScreen />
-                  <div className="w-full flex flex-col max-h-[100dvh]">
+                  <body
+                    className={`flex`}
+                  >
                     <SignedIn>
-                      <Navbar />
+                      <div className="h-[100dvh]">
+                        <Sidebar />
+                      </div>
                     </SignedIn>
-                    <SignedOut>
-                      <SigninNavbar />
-                    </SignedOut>
-                    {children}
-                  </div>
-                </body>
+                    <ModalBlackScreen />
+                    <div className="w-full flex flex-col max-h-[100dvh]">
+                      <SignedIn>
+                        <Navbar />
+                      </SignedIn>
+                      <SignedOut>
+                        <SigninNavbar />
+                      </SignedOut>
+                      {children}
+                    </div>
+                  </body>
               </UploadProvider>
             </ModalProvider>
           </SidebarProvider>

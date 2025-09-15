@@ -53,46 +53,37 @@ const FilePreview: React.FC<FilePreviewProps> = ({
   }
 
   // Document preview
-  // return (
-  //   <div
-  //     className="relative group flex items-center rounded-[var(--border-radius-300)] border border-[#3f3f3f] p-2 gap-2 w-[280px]"
-  //     // onMouseEnter={() => setIsHovered(true)}
-  //     // onMouseLeave={() => setIsHovered(false)}
-  //   >
-  //     {/* File icon based on type */}
-  //     <div className='bg-[#FA423E] rounded-[var(--border-radius-200)] w-10 h-10 flex-center'>
-  //       {file.name.toLowerCase().endsWith('.pdf') ? (
-  //         <FileText size={16} className="text-white" />
-  //       ) : (
-  //         <File size={16} className="text-white" />
-  //       )}
-  //     </div>
-  //     <div className='text-[14px]'>
-  //       {/* File Name */}
-  //       <div className="truncate font-semibold">{file.name}</div>
-  //       {/* File extension */}
-  //       <span className="">
-  //         {file.name.split('.').pop()?.substring(0, 3).toUpperCase()}
-  //       </span>
-  //     </div>
-  //     {/* Remove button */}
-  //     {/* {isHovered && ( */}
-  //     <button
-  //       onClick={handleRemove}
-  //       className="absolute top-1 right-1 bg-white text-black rounded-full p-1 transition-colors duration-200 shadow-lg"
-  //       title="Remove file"
-  //     >
-  //       <X size={12} />
-  //     </button>
-  //     {/* )} */}
-
-  //     {/* File info tooltip */}
-  //     {/* <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-gray-600 text-center w-24">
-  //       <div className="truncate">{file.name}</div>
-  //       <div className="text-gray-400">{formatFileSize(file.size)}</div>
-  //     </div> */}
-  //   </div>
-  // );
+  return (
+    <div
+      className="relative group flex items-center rounded-[var(--border-radius-300)] border border-[#3f3f3f] p-2 gap-2 w-[280px]"
+    >
+      {/* File icon based on type */}
+      <div className='bg-[#FA423E] rounded-[var(--border-radius-200)] w-10 h-10 flex-center'>
+        {file.name.toLowerCase().endsWith('.pdf') ? (
+          <FileText size={16} className="text-white" />
+        ) : (
+          <File size={16} className="text-white" />
+        )}
+      </div>
+      <div className='text-[14px]'>
+        {/* File Name */}
+        <div className="truncate font-semibold">{file.name}</div>
+        {/* File extension */}
+        <span className="">
+          {file.name.split('.').pop()?.substring(0, 3).toUpperCase()}
+        </span>
+      </div>
+      {/* Remove button */}
+      <button
+        onClick={handleRemove}
+        className="absolute top-1 right-1 bg-white text-black rounded-full p-1 transition-colors duration-200 shadow-lg"
+        title="Remove file"
+      >
+        <X size={12} />
+      </button>
+      {/* )} */}
+    </div>
+  );
 };
 
 export default FilePreview;

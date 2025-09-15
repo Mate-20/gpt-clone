@@ -1,5 +1,5 @@
 'use client'
-import React, { memo, useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import InputComponent from './InputComponent'
 import MessagesScreen from './MessagesScreen';
 import { useChat } from '@/context/ChatContext';
@@ -8,6 +8,11 @@ import LimitReached from './LimitReached';
 import { useUser } from '@clerk/nextjs'
 import { useUpload } from '@/context/UploadImageContext';
 
+type UploadedFile ={
+  type : string;
+  name : string;
+  content : string;
+}
 interface Props {
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
   inputPromt: string;
@@ -17,6 +22,7 @@ interface Props {
 
 const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
   const { user, isLoaded } = useUser()
+    const { files, fileExractedText } = useUpload();
   const { messages, setMessages } = useChat();
   const [limitCrossed, setLimitCrossed] = useState(false);
   const [promptsLength, setPromptsLength] = useState(0);
@@ -27,6 +33,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
       setLimitCrossed(true);
     }
   }, [])
+
 
   // const sendMessage = async (inputMessage: string, editedHistory?: any[]) => {
   //   if (limitCrossed) return;
@@ -75,17 +82,37 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
   //     setAssistantMessageLoader(false);
   //   }
   // };
-  const sendMessage = async (inputMessage: string, fileUrl : string, editedHistory?: any[]) => {
+  const sendMessage = async (inputMessage: string, imageUrl : string, editedHistory?: any[]) => {
     if (limitCrossed) return;
 
     setAssistantMessageLoader(true);
     // Only append the message locally (no _id)
     let userMessage;
-    if (fileUrl) {
+    let fileContent = {
+      type : "",
+      name : "",
+      content : ""
+    }
+    if(files[0].type.includes("pdf")){
+      fileContent = {
+        type : files[0].type,
+        name : files[0].name,
+        content : fileExractedText
+      }
       userMessage = {
         role: "user" as const,
         content: inputMessage,
-        imageUrl: fileUrl,
+        fileContent,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: user?.id, // optional for frontend tracking
+      };
+    }
+    else if (imageUrl) {
+      userMessage = {
+        role: "user" as const,
+        content: inputMessage,
+        imageUrl: imageUrl,
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: user?.id, // optional for frontend tracking
@@ -115,7 +142,8 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
         chatId || "",
         mem0Id || "",
         inputMessage,
-        fileUrl ? fileUrl : "",
+        imageUrl ? imageUrl : "",
+        fileContent,
         (partial) => {
           setMessages((prev) => [
             ...prev.filter((m) => m._tempId !== tempId),
@@ -167,7 +195,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
     // Only keep messages before + edited one
     const updated = [...before, edited];
     // Restart from here: re-run AI for this edited message
-    sendMessage(editedInput, "", updated);
+    sendMessage(editedInput, "",updated);
 
   };
 
@@ -198,3 +226,7 @@ const ChatBox = ({ setInputPrompt, inputPromt, mem0Id, chatId }: Props) => {
 
 export default ChatBox
 {/* <span className='text-center text-[16px] text-[var(--secondary-text)] w-[220px] max-[780px]:hidden'>This chat won't appear in history, use or update ChatGPT's memory, or be used to train our models. For safety purposes, we may keep a copy of this chat for up to 30 days.</span> */ }
+
+function setExtractedText() {
+  throw new Error('Function not implemented.');
+}
