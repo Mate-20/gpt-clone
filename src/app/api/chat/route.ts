@@ -121,10 +121,7 @@ export async function POST(req: Request) {
         };
       }
       else {
-        return {
-          role: msg.role,
-          content: msg.inputMessage
-        };
+        return msg
       } // normal text-only
     });
     // 4. Pull memory context from mem0
@@ -160,6 +157,15 @@ export async function POST(req: Request) {
             { user_id: mem0Id }
           );
         } catch (err) {
+           const assistantMessage = {
+            chatId: chatId,
+            role: "assistant",
+            content: "⚠️ Something went wrong. Please try again",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            userId: clerkUserId,
+          };
+          await messagesCol.insertOne(assistantMessage);
           console.error("❌ Failed to save:", err);
         }
       },
