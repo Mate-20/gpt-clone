@@ -111,7 +111,7 @@ export async function POST(req: Request) {
         };
       }
       // If any image is there
-      if (msg.imageUrl) {
+      else if (msg.imageUrl) {
         return {
           role: msg.role,
           content: [
@@ -120,7 +120,12 @@ export async function POST(req: Request) {
           ]
         };
       }
-      return msg; // normal text-only
+      else {
+        return {
+          role: msg.role,
+          content: msg.inputMessage
+        };
+      } // normal text-only
     });
     // 4. Pull memory context from mem0
     const memories = await mem0.search(messages[0].content, {
