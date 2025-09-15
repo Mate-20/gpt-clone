@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     // Convert to Gemini-compatible format
     const formattedMessages = messages.map((msg: any) => {
       // If any document pdf is there
-      if (msg.fileContent) {
+      if (msg?.fileContent?.type?.includes("pdf")) {
         return {
           role: msg.role,
           content: [
