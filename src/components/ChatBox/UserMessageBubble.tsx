@@ -100,11 +100,11 @@ const UserMessageBubble = ({ message, onEdit, onCopy }: UserMessageBubbleProps) 
             onClick={handleCopy}
             tooltip="Copy"
           />
-          <ActionButton
+          {/* <ActionButton
             icon={Edit3}
             onClick={handleEdit}
             tooltip="Edit message"
-          />
+          /> */}
 
         </div>
 
